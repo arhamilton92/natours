@@ -2,9 +2,9 @@
 
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const app = require('./app'); // EXPRESS
 
-dotenv.config({ path: './.env' }); // ENV variables
+dotenv.config({ path: './.env' }); // ENV variables BEFORE EXPRESS
+const app = require('./app'); // EXPRESS
 
 // DATABASE
 const password = process.env.DATABASE_PASSWORD;
