@@ -1,7 +1,3 @@
-/** @format */
-
-const fs = require('fs');
-
 const tours = require(`${__dirname}/../dev-data/data/tours-simple.json`);
 
 exports.checkID = (req, res, next, val) => {
