@@ -12,13 +12,22 @@ exports.getAllTours = async (req, res) => {
 		//
 
 		// 2: advanced filtering
-		let queryStr = JSON.stringify(queryObj)
-		queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+		let queryStr = JSON.stringify(queryObj);
+		queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-		const query = Tour.find(JSON.parse(queryStr));
+		let query = Tour.find(JSON.parse(queryStr));
+
+		// 3: sorting
+		if (req.query.sort) {
+			const sortBy = req.query.sort.split(',').join(' ');
+			console.log(sortBy);
+			query = query.sort(sortBy);
+		} else {
+			query = query.sort('-createdAt')
+		}
 		//
 		// EXECUTE QUERY
-		const tours = await query
+		const tours = await query;
 		res.status(200).json(tours);
 	} catch (error) {
 		res.status(404).json({
