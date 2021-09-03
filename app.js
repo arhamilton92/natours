@@ -4,8 +4,8 @@ const express = require('express');
 const morgan = require('morgan');
 
 // DEFINE ROUTERS
-const tourRouter = require('./routes/tourRoutes.js');
-const userRouter = require('./routes/userRoutes.js');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 // DEFINE EXPRESS
 const app = express();
