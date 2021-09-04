@@ -29,14 +29,14 @@ const tourSchema = new mongoose.Schema(
 			trim: true,
 			enum: {
 				values: ['easy', 'medium', 'difficult'],
-				message: 'Accepted values: easy, medium, difficult'
-			} 
+				message: 'Accepted values: easy, medium, difficult',
+			},
 		},
 		ratingsAverage: {
 			type: Number,
 			default: 4.5,
 			min: [1, 'Rating must be between 1 and 5'],
-			max: [5, 'Rating must be between 1 and 5']
+			max: [5, 'Rating must be between 1 and 5'],
 		},
 		ratingsQuantity: {
 			type: Number,
@@ -46,7 +46,17 @@ const tourSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, 'A tour must have a price'],
 		},
-		discountPrice: Number,
+		discountPrice: {
+			type: Number,
+			validate: {
+				validator: function (val) {
+					// WILL NOT WORK ON UPDATE
+					return val < this.price;
+				},
+				message:
+					'Discount price ({VALUE}) must be lower than the regular price',
+			},
+		},
 		summary: {
 			type: String,
 			trim: true,
