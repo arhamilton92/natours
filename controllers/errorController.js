@@ -10,10 +10,17 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-	res.status(err.statusCode).json({
-		status: err.status,
-		message: err.message,
-	});
+	if (err.isOperational) { 				// OPERATIONAL ERROR
+		res.status(err.statusCode).json({
+			status: err.status,
+			message: err.message,
+		});
+	} else { 								//PROGRAMMING ERROR
+		res.status(500).json({
+			status: 'error',
+			message: 'Something went wrong'
+		})
+	}
 };
 
 module.exports = (err, req, res, next) => {
