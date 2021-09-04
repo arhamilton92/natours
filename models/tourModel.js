@@ -84,8 +84,15 @@ tourSchema.pre('save', function (next) {
 // QUERY MIDDLEWARE
 tourSchema.pre(/^find/, function (next) {
 	this.find({ secretTour: false });
+	this.start = Date.now();
 	next();
-}); // --------------------------------
+});
+//
+// tourSchema.post(/^find/, function (docs, next) {
+// 	console.log('-----')
+// 	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`)
+// 	next();
+// }); // --------------------------------
 
 // MODEL
 const Tour = mongoose.model('Tour', tourSchema);
