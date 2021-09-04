@@ -2,6 +2,10 @@
 
 const express = require('express');
 const morgan = require('morgan');
+//
+const AppError = require('./utils/AppError')
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -15,20 +19,12 @@ app.use(express.static(`${__dirname}/public`));
 // ------------------------------------
 
 // ROUTER
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-//
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-// incorrect URL error
-app.all('*', (req, res, next) => {
-	const err = new Error(`Can't find ${req.originalUrl}`)
-	err.status = 'failed';
-	err.statusCode = 404
-	//
-	next(err)
+//
+app.all('*', (req, res, next) => { // incorrect URL error
+	next(new AppError(`Can't find ${req.originalUrl}`, 404))
 });
-// error handling
 app.use((err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || 'error';
