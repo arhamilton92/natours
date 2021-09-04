@@ -96,6 +96,7 @@ exports.deleteTour = async (req, res) => {
 	}
 };
 
+// AGGREGATION
 exports.getTourStats = async (req, res) => {
 	try {
 		const stats = await Tour.aggregate([
@@ -126,9 +127,56 @@ exports.getTourStats = async (req, res) => {
 			data: stats,
 		});
 	} catch (error) {
-		res.status(400).json({
+		res.status(404).json({
 			status: 'failed',
 			error,
 		});
 	}
 };
+//
+exports.getMonthlyPlan = async (req, res) => {
+	try {
+		const year = req.params.year * 1;
+		const plan = await Tour.aggregate([
+			{
+				$unwind: '$startDates',
+			},
+			{
+				$match: {
+					startDates: {
+						$gte: new Date(`${year}-01-01`),
+						$lte: new Date(`${year}-12-31`),
+					},
+				},
+			},
+			{
+				$group: {
+					_id: { $month: '$startDates' },
+					numTourStarts: { $sum: 1 },
+					tours: { $push: '$name' },
+				},
+			},
+			{
+				$addFields: { month: '$_id' },
+			},
+			{
+				$sort: { numTourStarts: -1 },
+			},
+			{
+				$project: { _id: 0 },
+			},
+		]);
+		//
+		res.status(200).json({
+			status: 'success',
+			data: {
+				plan,
+			},
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: 'failed',
+			error,
+		});
+	}
+}; // --------------------------------
