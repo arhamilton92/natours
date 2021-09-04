@@ -20,7 +20,11 @@ exports.getAllTours = async (req, res) => {
 			.paginate();
 		const tours = await features.query;
 		//
-		res.status(200).json(tours);
+		res.status(200).json({
+			status: 'success',
+			results: tours.length,
+			data: tours
+		});
 	} catch (error) {
 		res.status(404).json({
 			status: 'failed',
