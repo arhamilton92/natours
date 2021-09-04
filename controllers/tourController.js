@@ -125,7 +125,6 @@ exports.getTourStats = async (req, res) => {
 				$match: { _id: { $ne: 'EASY' } },
 			},
 		]);
-		console.log;
 		res.status(200).json({
 			status: 'success',
 			data: stats,
