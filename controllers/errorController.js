@@ -1,17 +1,24 @@
 /** @format */
 const AppError = require('../utils/AppError');
 
+// MONGO/MONGOOSE ERROR HANDLING
 const handleCastErrorDB = (err) => {
 	const message = `invalid ${err.path}: ${err.value}`;
 	return new AppError(message, 400);
+}; 
+//
+const handleValidationErrorDB = (err) => {
+	const errors = Object.values(err.errors).map(el => el.message)
+	const message = `Invalid input data: ${errors.join('. ')}`
+	return new AppError(message, 400);
 };
-
+//
 const handleDuplicateFieldsDB = (err) => {
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 	console.log(value)
 	const message = `Duplicate field value: ${value}.`;
 	return new AppError(message, 400);
-};
+}; // ---------------------------------
 
 const sendErrorDev = (err, res) => {
 	res.status(err.statusCode).json({
@@ -48,7 +55,7 @@ module.exports = (err, req, res, next) => {
 		let errObj = Object.assign(err);
 		//
 		if (errObj.name === 'CastError') errObj = handleCastErrorDB(errObj);
-		//
+		if (errObj.name === 'ValidationError') errObj = handleValidationErrorDB(errObj);
 		if (errObj.code === 11000) errObj = handleDuplicateFieldsDB(errObj);
 		sendErrorProd(errObj, res);
 	}
