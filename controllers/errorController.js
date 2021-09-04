@@ -1,5 +1,10 @@
 /** @format */
 
+const handleCastErrorDB = err => {
+	const message = `invalid ${err.path}: ${err.value}`;
+	return(new AppError(message, 400))
+}
+
 const sendErrorDev = (err, res) => {
 	res.status(err.statusCode).json({
 		status: err.status,
@@ -10,17 +15,18 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-	if (err.isOperational) { 				// OPERATIONAL ERROR
+	if (err.isOperational) {
+		// OPERATIONAL ERROR
 		res.status(err.statusCode).json({
 			status: err.status,
 			message: err.message,
 		});
 	} else {
-		console.error('ERROR', err)			// PROGRAMMING ERROR
+		console.error('ERROR', err); // PROGRAMMING ERROR
 		res.status(500).json({
 			status: 'error',
-			message: 'Something went wrong'
-		})
+			message: 'Something went wrong',
+		});
 	}
 };
 
@@ -31,6 +37,8 @@ module.exports = (err, req, res, next) => {
 	if (process.env.NODE_ENV === 'development') {
 		sendErrorDev(err, res);
 	} else if (process.env.NODE_ENV === 'production') {
-		sendErrorProd(err, res);
+		let errObj = { ...err };
+		if (errObj.name === 'CastError') errObj = handleCastErrorDB(errObj);
+		sendErrorProd(errObj, res);
 	}
 };
