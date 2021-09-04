@@ -11,6 +11,8 @@ const tourSchema = new mongoose.Schema(
 			required: [true, 'A tour must have a name'],
 			unique: true,
 			trim: true,
+			maxLength: [40, 'A tour name must only have up to 40 characters'],
+			minLength: [8, 'A tour name must have minimum 8 characters'],
 		},
 		slug: String,
 		duration: {
@@ -25,10 +27,16 @@ const tourSchema = new mongoose.Schema(
 			type: String,
 			required: [true, 'A tour must have a difficulty'],
 			trim: true,
+			enum: {
+				values: ['easy', 'medium', 'difficult'],
+				message: 'Accepted values: easy, medium, difficult'
+			} 
 		},
 		ratingsAverage: {
 			type: Number,
 			default: 4.5,
+			min: [1, 'Rating must be between 1 and 5'],
+			max: [5, 'Rating must be between 1 and 5']
 		},
 		ratingsQuantity: {
 			type: Number,
@@ -89,17 +97,17 @@ tourSchema.pre(/^find/, function (next) {
 });
 //
 tourSchema.post(/^find/, function (docs, next) {
-	console.log('-----')
-	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`)
+	console.log('-----');
+	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`);
 	next();
 }); // --------------------------------
 
 // AGGREGATION MIDDLEWARE
 tourSchema.pre('aggregate', function (next) {
-	this.pipeline().unshift({ $match: { secretTour: false }})
+	this.pipeline().unshift({ $match: { secretTour: false } });
 	console.log(this.pipeline());
-	next()
-}) // --------------------------------
+	next();
+}); // --------------------------------
 
 // MODEL
 const Tour = mongoose.model('Tour', tourSchema);
