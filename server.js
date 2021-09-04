@@ -6,6 +6,13 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './.env' }); // ENV variables BEFORE EXPRESS
 const app = require('./app'); // EXPRESS
 
+// UNCAUGHT EXCEPTION HANDLER
+process.on('uncaughtException', (err) => {
+	console.log('uncaught exception');
+	console.log(err.name, err.message);
+	process.exit()
+}); // --------------------------------
+
 // DATABASE
 const password = process.env.DATABASE_PASSWORD;
 const DB = process.env.DATABASE.replace('<PASSWORD>', password);
@@ -26,14 +33,6 @@ const server = app.listen(port, () => {
 }); // --------------------------------
 
 process.on('unhandledRejection', (err) => {
-	console.log(err.name, err.message);
-	server.close(() => {
-		process.exit(1);
-	});
-});
-
-process.on('uncaughtException', (err) => {
-	console.log('uncaught exception');
 	console.log(err.name, err.message);
 	server.close(() => {
 		process.exit(1);
