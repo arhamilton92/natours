@@ -15,7 +15,8 @@ const sendErrorProd = (err, res) => {
 			status: err.status,
 			message: err.message,
 		});
-	} else { 								//PROGRAMMING ERROR
+	} else {
+		console.error('ERROR', err)			// PROGRAMMING ERROR
 		res.status(500).json({
 			status: 'error',
 			message: 'Something went wrong'
