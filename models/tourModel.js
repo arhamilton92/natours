@@ -88,11 +88,11 @@ tourSchema.pre(/^find/, function (next) {
 	next();
 });
 //
-// tourSchema.post(/^find/, function (docs, next) {
-// 	console.log('-----')
-// 	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`)
-// 	next();
-// }); // --------------------------------
+tourSchema.post(/^find/, function (docs, next) {
+	console.log('-----')
+	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`)
+	next();
+}); // --------------------------------
 
 // MODEL
 const Tour = mongoose.model('Tour', tourSchema);
