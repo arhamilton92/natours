@@ -11,27 +11,26 @@ exports.aliasTopTours = async (req, res, next) => {
 	next();
 }; // --------------------------------
 
-exports.getAllTours = async (req, res) => {
-	try {
-		const features = new APIFeatures(Tour.find(), req.query)
-			.filter()
-			.sort()
-			.limitFields()
-			.paginate();
-		const tours = await features.query;
-		//
-		res.status(200).json({
-			status: 'success',
-			results: tours.length,
-			data: tours
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'failed',
-			error,
-		});
-	}
+const catchAsync = (fn) => {
+	return (req, res, next) => {
+		fn(req, res, next).catch(next);
+	};
 };
+
+exports.getAllTours = catchAsync(async (req, res, next) => {
+	const features = new APIFeatures(Tour.find(), req.query)
+		.filter()
+		.sort()
+		.limitFields()
+		.paginate();
+	const tours = await features.query;
+	//
+	res.status(200).json({
+		status: 'success',
+		results: tours.length,
+		data: tours,
+	});
+});
 
 exports.getTour = async (req, res) => {
 	try {
@@ -46,23 +45,16 @@ exports.getTour = async (req, res) => {
 	}
 };
 
-exports.createTour = async (req, res) => {
-	try {
-		const newTour = await Tour.create(req.body);
-		//
-		res.status(201).json({
-			status: 'success',
-			data: {
-				tour: newTour,
-			},
-		});
-	} catch (error) {
-		res.status(400).json({
-			status: 'failed',
-			error,
-		});
-	}
-};
+exports.createTour = catchAsync(async (req, res, next) => {
+	const newTour = await Tour.create(req.body);
+	//
+	res.status(201).json({
+		status: 'success',
+		data: {
+			tour: newTour,
+		},
+	});
+});
 
 exports.updateTour = async (req, res) => {
 	try {
