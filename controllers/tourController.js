@@ -1,7 +1,7 @@
 /** @format */
 
 const Tour = require('../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures')
+const APIFeatures = require('../utils/apiFeatures');
 
 // ALIASES
 exports.aliasTopTours = async (req, res, next) => {
@@ -13,7 +13,11 @@ exports.aliasTopTours = async (req, res, next) => {
 
 exports.getAllTours = async (req, res) => {
 	try {
-		const features = new APIFeatures(Tour.find(), req.query).filter().sort().limitFields().paginate();
+		const features = new APIFeatures(Tour.find(), req.query)
+			.filter()
+			.sort()
+			.limitFields()
+			.paginate();
 		const tours = await features.query;
 		//
 		res.status(200).json(tours);
