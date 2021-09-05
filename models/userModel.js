@@ -25,7 +25,13 @@ const userSchema = new mongoose.Schema({
 	},
     passwordConfirm: {
         type: String,
-        required: [true, 'Both password fields must match']
+		required: [true, 'Both password fields must match'],
+		validate: {
+			validator: function (el) {
+				return el === this.password
+			},
+			message: 'Passwords are not the same'
+		}
     }
 }); // --------------------------------
 
