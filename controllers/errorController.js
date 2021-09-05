@@ -5,7 +5,9 @@ const AppError = require('../utils/AppError');
 const handleCastErrorDB = (err) => {
 	const message = `invalid ${err.path}: ${err.value}`;
 	return new AppError(message, 400);
-}; 
+};
+
+const handleJWTError = err=> new AppError('Invalid token. Please log in again.', 401)
 //
 const handleValidationErrorDB = (err) => {
 	const errors = Object.values(err.errors).map(el => el.message)
@@ -57,6 +59,7 @@ module.exports = (err, req, res, next) => {
 		if (errObj.name === 'CastError') errObj = handleCastErrorDB(errObj);
 		if (errObj.name === 'ValidationError') errObj = handleValidationErrorDB(errObj);
 		if (errObj.code === 11000) errObj = handleDuplicateFieldsDB(errObj);
+		if (errObj.name === 'JsonWebTokenError') errObj = handleJWTError(errObj);
 		sendErrorProd(errObj, res);
 	}
 };
