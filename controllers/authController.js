@@ -13,8 +13,9 @@ const signToken = (id) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+	const { name, email, password, passwordConfirm } = req.body
 	const newUser = await User.create(
-		({ name, email, password, passwordConfirm } = req.body)
+		({name, email, password, passwordConfirm})
 	);
 	const token = signToken(newUser._id);
 	res.status(201).json({
