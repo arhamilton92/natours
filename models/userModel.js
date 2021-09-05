@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'Please enter a password'],
 		minLength: [8, 'A password must have minimum 8 characters'],
-		select: false
+		select: false,
 	},
 	passwordConfirm: {
 		type: String,
@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
 			message: 'Passwords are not the same',
 		},
 	},
+	passwordChangedAt: Date,
 }); // --------------------------------
 
 // DOCUMENT MIDDLEWARE
@@ -43,13 +44,26 @@ userSchema.pre('save', async function (next) {
 	//
 	this.password = await bcrypt.hash(this.password, 12);
 	this.passwordConfirm = undefined;
-	next()
+	next();
 }); // --------------------------------
 
 // INSTANCE METHOD
-userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
-	return await bcrypt.compare(candidatePassword, userPassword)
-} // --------------------------------
+userSchema.methods.correctPassword = async function (
+	candidatePassword,
+	userPassword
+) {
+	return await bcrypt.compare(candidatePassword, userPassword);
+};
+userSchema.methods.changedPasswordAfter = async function (JWTTimestamp) {
+	if (this.passwordChangedAt) {
+		const changedTimestamp = parseInt(
+			this.passwordChangedAt.getTime() / 1000,
+			10
+		);
+		return JWTTimestamp < changedTimestamp // 100 < 200
+	}
+	return false;
+}; // --------------------------------
 
 // MODEL
 const User = mongoose.model('User', userSchema);
