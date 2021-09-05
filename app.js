@@ -27,6 +27,6 @@ app.all('*', (req, res, next) => { 			// incorrect URL error
 	next(new AppError(`Can't find ${req.originalUrl}`, 404))
 });
 app.use(globalErrorHandler);
-// ------------------------------------
+// --------------------------------
 
 module.exports = app;
