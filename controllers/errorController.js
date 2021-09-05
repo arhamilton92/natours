@@ -7,21 +7,25 @@ const handleCastErrorDB = (err) => {
 	return new AppError(message, 400);
 };
 //
-const handleJWTError = err => new AppError('Invalid token. Please log in again.', 401)
-const handleJWTExpired = err=> new AppError('Expired token. Please log in again.', 401)
-//
 const handleValidationErrorDB = (err) => {
-	const errors = Object.values(err.errors).map(el => el.message)
-	const message = `Invalid input data: ${errors.join('. ')}`
+	const errors = Object.values(err.errors).map((el) => el.message);
+	const message = `Invalid input data: ${errors.join('. ')}`;
 	return new AppError(message, 400);
 };
 //
 const handleDuplicateFieldsDB = (err) => {
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-	console.log(value)
+	console.log(value);
 	const message = `Duplicate field value: ${value}.`;
 	return new AppError(message, 400);
 }; // ---------------------------------
+
+// JWT ERRORS
+const handleJWTError = (err) =>
+	new AppError('Invalid token. Please log in again.', 401);
+const handleJWTExpired = (err) =>
+	new AppError('Expired token. Please log in again.', 401);
+// ------------------------------------
 
 const sendErrorDev = (err, res) => {
 	res.status(err.statusCode).json({
@@ -58,7 +62,8 @@ module.exports = (err, req, res, next) => {
 		let errObj = Object.assign(err);
 		//
 		if (errObj.name === 'CastError') errObj = handleCastErrorDB(errObj);
-		if (errObj.name === 'ValidationError') errObj = handleValidationErrorDB(errObj);
+		if (errObj.name === 'ValidationError')
+			errObj = handleValidationErrorDB(errObj);
 		if (errObj.code === 11000) errObj = handleDuplicateFieldsDB(errObj);
 		if (errObj.name === 'JsonWebTokenError') errObj = handleJWTError(errObj);
 		if (errObj.name === 'TokenExpiredError') errObj = handleJWTExpired(errObj);
