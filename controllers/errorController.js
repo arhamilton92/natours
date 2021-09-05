@@ -1,7 +1,7 @@
 /** @format */
 const AppError = require('../utils/AppError');
 
-// MONGO/MONGOOSE ERROR HANDLING
+// MONGODB/MONGOOSE ERROR HANDLING
 const handleCastErrorDB = (err) => {
 	const message = `invalid ${err.path}: ${err.value}`;
 	return new AppError(message, 400);
