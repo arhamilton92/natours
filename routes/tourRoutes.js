@@ -20,12 +20,15 @@ const router = express.Router();
 router.route('/tour-stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(getMonthlyPlan);
 router.route('/top-5-tours').get(aliasTopTours, getAllTours);
-router.route('/').get(protect, getAllTours).post(createTour);
+router
+	.route('/')
+	.get(protect, getAllTours)
+	.post(protect, restrict(['admin', 'lead']), createTour);
 
 router
 	.route('/:id')
 	.get(getTour)
-	.patch(protect, updateTour)
-	.delete(protect, restrict('admin', 'lead'), deleteTour);
+	.patch(protect, restrict(['admin', 'lead']), updateTour)
+	.delete(protect, restrict(['admin', 'lead']), deleteTour);
 
 module.exports = router;
