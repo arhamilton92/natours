@@ -13,17 +13,15 @@ const signToken = (id) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-	const { name, email, password, passwordConfirm } = req.body
-	const newUser = await User.create(
-		({name, email, password, passwordConfirm})
-	);
+	const { name, email, password, passwordConfirm } = req.body;
+	const newUser = await User.create({ name, email, password, passwordConfirm });
 	const token = signToken(newUser._id);
 	res.status(201).json({
 		status: 'success',
 		data: {
 			user: newUser,
 		},
-		token
+		token,
 	});
 });
 
@@ -51,7 +49,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 	//
 	// CHECK & DECODE TOKEN
 	if (auth && auth.startsWith('Bearer ')) token = auth.split(' ')[1];
-	if (!token) return next(new AppError('You are not logged in.', 401))
+	if (!token) return next(new AppError('You are not logged in.', 401));
 	const decodedToken = await promisify(jwt.verify)(
 		token,
 		process.env.JWT_SECRET
@@ -70,3 +68,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 	req.user = freshUser;
 	next();
 });
+
+exports.restrict = (...roles) => {
+	return (req, res, next) => {
+		// roles is an array ['admin', 'lead']
+		if (!roles.includes(req.user.role))
+			return next(
+				new AppError('You do not have permission to perform this action', 403)
+			);
+		
+		next()
+	};
+};

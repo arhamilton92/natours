@@ -1,7 +1,7 @@
 /** @format */
 
 const express = require('express');
-const { protect } = require('../controllers/authController');
+const { protect, restrict } = require('../controllers/authController');
 const {
 	aliasTopTours,
 	getAllTours,
@@ -22,6 +22,10 @@ router.route('/monthly-plan/:year').get(getMonthlyPlan);
 router.route('/top-5-tours').get(aliasTopTours, getAllTours);
 router.route('/').get(protect, getAllTours).post(createTour);
 
-router.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+router
+	.route('/:id')
+	.get(getTour)
+	.patch(protect, updateTour)
+	.delete(protect, restrict('admin', 'lead'), deleteTour);
 
 module.exports = router;
