@@ -51,7 +51,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 	//
 	// CHECK & DECODE TOKEN
 	if (auth && auth.startsWith('Bearer ')) token = auth.split(' ')[1];
-	if (!token) return new AppError('You are not logged in.', 401);
+	if (!token) return next(new AppError('You are not logged in.', 401))
 	const decodedToken = await promisify(jwt.verify)(
 		token,
 		process.env.JWT_SECRET
