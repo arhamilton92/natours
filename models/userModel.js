@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
 		required: [true, 'name is required'],
 		trim: true,
 	},
+	role: {
+		type: String,
+		enum: ['user', 'guide', 'lead', 'admin'],
+		default: 'user',
+	},
 	email: {
 		type: String,
 		required: true,
