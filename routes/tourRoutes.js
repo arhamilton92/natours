@@ -24,7 +24,6 @@ router
 	.route('/')
 	.get(protect, getAllTours)
 	.post(protect, restrict(['admin', 'lead']), createTour);
-
 router
 	.route('/:id')
 	.get(getTour)
