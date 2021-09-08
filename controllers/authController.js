@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const sendEmail = require('../utils/email');
 
 const signToken = (id) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -43,6 +44,44 @@ exports.login = catchAsync(async (req, res, next) => {
 	});
 });
 
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+	const user = await User.findOne({ email: req.body.email });
+	if (!user)
+		return next(new AppError('There is no user with that email address', 404));
+	//
+	const resetToken = user.createPasswordResetToken(); 		// GENERATE RESET TOKEN
+	await user.save({ validateBeforeSave: false });				// SAVE
+	// 
+	//
+	const resetURL = `${req.protocol}://${req.get(
+		'host'
+	)}/api/v1/users/resetpassword/${resetToken}`;
+	//
+	const text = `Forgot your password? Submit a PATCH request with your new password to:\n\n${resetURL}\n\nIf you didn't submit a password request, please ignore this email.`;
+	try {
+		await sendEmail({										// SEND EMAIL
+			email: user.email,
+			subject: 'Your password reset token(valid for 10 min)',
+			text,
+		});
+		//
+		res.status(200).json({
+			status: 'success',
+			message: 'Token to email!',
+		});
+	} catch (error) {
+		user.passwordResetToken = undefined;
+		user.passwordResetExpires = undefined;
+		await user.save({ validateBeforeSave: false });
+		//
+		return next(await new AppError('There was an error sending the email. Please try again later.', 500))
+	}
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+	next();
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
 	const auth = req.headers.authorization;
 	let token;
@@ -71,11 +110,12 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.restrict = (roles) => {
 	return (req, res, next) => {
-		if (!roles.includes(req.user.role)) 		// roles is an array ['admin', 'lead']
+		if (!roles.includes(req.user.role))
+			// roles is an array ['admin', 'lead']
 			return next(
 				new AppError('You do not have permission to perform this action', 403)
 			);
 		//
-		next()
+		next();
 	};
 };
