@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema({
 	passwordResetToken: String,
 	passwordResetExpires: Date,
 	passwordChangedAt: Date,
+	active: {
+		type: Boolean,
+		default: true,
+		select: false
+	}
 }); // --------------------------------
 
 // DOCUMENT MIDDLEWARE
