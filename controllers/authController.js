@@ -20,9 +20,7 @@ const createSendToken = (user, statusCode, res) => {
 	res.status(statusCode).json({
 		status: 'success',
 		token,
-		data: {
-			user,
-		},
+		data: user
 	});
 };
 
@@ -108,8 +106,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.user.id).select('+password');
 	//
-	if (!user.correctPassword(req.body.checkPassword, user.password))
+	if (!(await user.correctPassword(req.body.checkPassword, user.password))) {
+		console.log('incorrect password');
 		return next(new AppError('incorrect password', 401));
+	}
 	//
 	user.password = req.body.newPassword;
 	user.passwordConfirm = req.body.passwordConfirm;
