@@ -1,5 +1,6 @@
 /** @format */
 
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
@@ -49,9 +50,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 	if (!user)
 		return next(new AppError('There is no user with that email address', 404));
 	//
-	const resetToken = user.createPasswordResetToken(); 		// GENERATE RESET TOKEN
-	await user.save({ validateBeforeSave: false });				// SAVE
-	// 
+	const resetToken = user.createPasswordResetToken(); // GENERATE RESET TOKEN
+	await user.save({ validateBeforeSave: false }); // SAVE
+	//
 	//
 	const resetURL = `${req.protocol}://${req.get(
 		'host'
@@ -59,7 +60,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 	//
 	const text = `Forgot your password? Submit a PATCH request with your new password to:\n\n${resetURL}\n\nIf you didn't submit a password request, please ignore this email.`;
 	try {
-		await sendEmail({										// SEND EMAIL
+		await sendEmail({
+			// SEND EMAIL
 			email: user.email,
 			subject: 'Your password reset token(valid for 10 min)',
 			text,
@@ -74,12 +76,38 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 		user.passwordResetExpires = undefined;
 		await user.save({ validateBeforeSave: false });
 		//
-		return next(await new AppError('There was an error sending the email. Please try again later.', 500))
+		return next(
+			new AppError(
+				'There was an error sending the email. Please try again later.',
+				500
+			)
+		);
 	}
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-	next();
+	const hashedToken = crypto
+		.createHash('sha256')
+		.update(req.params.token)
+		.digest('hex');
+	//
+	const user = await User.findOne({
+		passwordResetToken: hashedToken,
+		passwordResetExpires: { $gt: Date.now() },
+	});
+	//
+	if (!user) return next(new AppError('Token is invalid or has expired', 400));
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
+	user.passwordResetoken = undefined;
+	user.passwordResetExpires = undefined;
+	await user.save();
+	const token = signToken(user._id);
+	//
+	res.status(200).json({
+		status: 'success',
+		token,
+	});
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
