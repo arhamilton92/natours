@@ -47,8 +47,8 @@ const userSchema = new mongoose.Schema({
 	active: {
 		type: Boolean,
 		default: true,
-		select: false
-	}
+		select: false,
+	},
 }); // --------------------------------
 
 // DOCUMENT MIDDLEWARE
@@ -63,7 +63,13 @@ userSchema.pre('save', async function (next) {
 	if (!this.isModified('password') || this.isNew) return next();
 	//
 	this.passwordChangedAt = Date.now() - 1000;
-	next()
+	next();
+}); // --------------------------------
+
+// QUERY MIDDLEWARE
+userSchema.pre(/^find/, async function (next) {
+	this.find({ active: { $ne: false } });
+	next();
 }); // --------------------------------
 
 // INSTANCE METHOD
