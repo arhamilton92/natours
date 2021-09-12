@@ -54,7 +54,7 @@ app.use(express.static(`${__dirname}/public`)); // SERVE STATIC FILES
 // ROUTER
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/review', reviewRouter);
 // ------------------------------------
 app.all('*', (req, res, next) => {
 	// incorrect URL error

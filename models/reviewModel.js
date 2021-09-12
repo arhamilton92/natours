@@ -7,17 +7,17 @@ const reviewSchema = new mongoose.Schema({
 	rating: {
 		type: Number,
 		values: [1, 2, 3, 4, 5],
-		required: [true, 'Review must have a rating']
+		required: [true, 'Review must have a rating'],
 	},
 	tour: {
 		type: mongoose.Schema.ObjectId,
-        ref: 'Tour',
-        required: [true, 'Review must belong to a tour.']
+		ref: 'Tour',
+		required: [true, 'Review must belong to a tour.'],
 	},
 	user: {
 		type: mongoose.Schema.ObjectId,
-        ref: 'User',
-        required: [true, 'Review must belong to a user.']
+		ref: 'User',
+		required: [true, 'Review must belong to a user.'],
 	},
 	createdAt: {
 		type: Date,
@@ -30,6 +30,16 @@ const reviewSchema = new mongoose.Schema({
 // ------------------------------------
 
 // QUERY MIDDLEWARE
+reviewSchema.pre(/^find/, function (next) {
+	this.populate({
+		path: 'user',
+		select: 'name photo',
+    }).populate({
+        path: 'tour',
+        select: 'name',
+    });
+	next();
+}); // --------------------------------
 // ------------------------------------
 
 // INSTANCE METHOD
