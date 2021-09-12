@@ -8,14 +8,14 @@ const {
 	createReview,
 } = require('../controllers/reviewController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 // router.param('id', checkID);
 
 router
 	.route('/')
 	.get(protect, getAllReviews)
-	.post(protect, restrict(['admin', 'lead']), createReview);
+	.post(protect, restrict(['user']), createReview);
 router.route('/:id').get(getReview);
 
 module.exports = router;
