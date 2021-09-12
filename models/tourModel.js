@@ -114,12 +114,12 @@ const tourSchema = new mongoose.Schema(
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },
 	}
-);
+); // --------------------------------
 
 // VIRTUALS
 tourSchema.virtual('durationWeeks').get(function () {
 	return this.duration / 7;
-});
+}); // --------------------------------
 // ------------------------------------
 
 // DOCUMENT MIDDLEWARE
@@ -127,7 +127,7 @@ tourSchema.pre('save', function (next) {
 	// RUNS BEFORE .save() & .create()
 	this.slug = slugify(this.name, { lower: true });
 	next();
-});
+}); // --------------------------------
 // ------------------------------------
 
 // QUERY MIDDLEWARE
@@ -135,18 +135,16 @@ tourSchema.pre(/^find/, function (next) {
 	this.find({ secretTour: false });
 	this.start = Date.now();
 	next();
-});
-//
+}); // --------------------------------
 tourSchema.pre(/^find/, function (next) {
 	this.populate({ path: 'guides', select: '-__v -passwordChangedAt' })
 	next();
-});
-//
+}); // --------------------------------
 tourSchema.post(/^find/, function (docs, next) {
 	console.log('-----');
 	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`);
 	next();
-});
+}); // --------------------------------
 // ------------------------------------
 
 // AGGREGATION MIDDLEWARE 
@@ -154,10 +152,8 @@ tourSchema.pre('aggregate', function (next) {
 	this.pipeline().unshift({ $match: { secretTour: false } });
 	console.log(this.pipeline());
 	next();
-});
+}); // --------------------------------
 // ------------------------------------
 
-// MODEL
 const Tour = mongoose.model('Tour', tourSchema);
 module.exports = Tour;
-// ------------------------------------
