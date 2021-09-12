@@ -68,6 +68,7 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 }); // --------------------------------
 
 exports.deleteTour = factory.deleteOne(Tour);
+// -----------------------------------
 
 // AGGREGATION
 exports.getTourStats = catchAsync(async (req, res, next) => {

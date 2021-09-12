@@ -79,3 +79,4 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 }); // --------------------------------
 
 exports.deleteUser = factory.deleteOne(User);
+// -----------------------------------
