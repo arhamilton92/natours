@@ -12,6 +12,7 @@ process.on('uncaughtException', (err) => {
 	console.log(err.name, err.message);
 	process.exit();
 }); // --------------------------------
+// ------------------------------------
 
 // DATABASE
 const password = process.env.DATABASE_PASSWORD;
@@ -29,6 +30,7 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
 	console.log(`App running on port ${port}`);
 }); // --------------------------------
+// ------------------------------------
 
 // UNHANDLED REJECTION HANDLER
 process.on('unhandledRejection', (err) => {
@@ -37,3 +39,4 @@ process.on('unhandledRejection', (err) => {
 		process.exit(1);
 	});
 }); // --------------------------------
+// ------------------------------------

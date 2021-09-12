@@ -11,7 +11,7 @@ const filterObj = (obj, ...allowedFields) => {
 		if (allowedFields.includes(el)) newObj[el] = obj[el];
 	});
 	return newObj;
-};
+}; // --------------------------------
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
 	const features = new APIFeatures(User.find(), req.query);
@@ -22,21 +22,21 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 		results: users.length,
 		data: users,
 	});
-});
+}); // --------------------------------
 
 exports.getUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'route not yet implemented',
 	});
-};
+}; // --------------------------------
 
 exports.createUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'route not yet implemented',
 	});
-};
+}; // --------------------------------
 
 exports.updateMe = catchAsync(async (req, res, next) => {
 	if (req.body.password || req.body.passwordConfirm) {
@@ -58,27 +58,27 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 			user: updatedUser,
 		},
 	});
-});
+}); // --------------------------------
 
 exports.updateUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'route not yet implemented',
 	});
-};
+}; // --------------------------------
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
 	await User.findByIdAndUpdate(req.user.id, { active: false });
 	//
 	res.status(204).json({
 		status: 'success',
-		data: null
-	})
-});
+		data: null,
+	});
+}); // --------------------------------
 
 exports.deleteUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'route not yet implemented',
 	});
-};
+}; // --------------------------------
