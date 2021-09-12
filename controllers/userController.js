@@ -4,6 +4,8 @@ const User = require('../models/userModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const factory = require('./handlerfactory')
+
 
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};
@@ -76,9 +78,4 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 	});
 }); // --------------------------------
 
-exports.deleteUser = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'route not yet implemented',
-	});
-}; // --------------------------------
+exports.deleteUser = factory.deleteOne(User);
