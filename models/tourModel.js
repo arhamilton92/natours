@@ -122,7 +122,7 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual('durationWeeks').get(function () {
 	return this.duration / 7;
 }); // --------------------------------
-tourSchema.virtual('reviews', {
+tourSchema.virtual('reviews', { // VIRTUAL POPULATE
 	ref: 'Review',
 	foreignField: 'tour',
 	localField: '_id'
