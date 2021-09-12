@@ -3,6 +3,7 @@
 const express = require('express');
 const { protect, restrict } = require('../controllers/authController');
 const {
+    allowNestedRoutes,
 	getReview,
 	getAllReviews,
 	createReview,
@@ -17,7 +18,7 @@ const router = express.Router({ mergeParams: true });
 router
 	.route('/')
 	.get(protect, getAllReviews)
-	.post(protect, restrict(['user']), createReview);
+	.post(protect, restrict(['user']), allowNestedRoutes, createReview);
 router
 	.route('/:id')
 	.get(getReview)
