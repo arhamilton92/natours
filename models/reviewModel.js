@@ -3,22 +3,21 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-	review: {
-		type: String,
-		required: true,
-	},
+	review: String,
 	rating: {
 		type: Number,
 		values: [1, 2, 3, 4, 5],
-		required: true,
+		required: [true, 'Review must have a rating']
 	},
 	tour: {
 		type: mongoose.Schema.ObjectId,
-		ref: 'Tour',
+        ref: 'Tour',
+        required: [true, 'Review must belong to a tour.']
 	},
 	user: {
 		type: mongoose.Schema.ObjectId,
-		ref: 'User',
+        ref: 'User',
+        required: [true, 'Review must belong to a user.']
 	},
 	createdAt: {
 		type: Date,
