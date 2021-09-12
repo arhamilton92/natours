@@ -30,3 +30,14 @@ exports.getReview = catchAsync(async (req, res, next) => {
 		data: review,
 	});
 }); // --------------------------------
+
+exports.createReview = catchAsync(async (req, res, next) => {
+	const newReview = await Review.create(req.body);
+	//
+	res.status(201).json({
+		status: 'success',
+		data: {
+			tour: newReview,
+		},
+	});
+}); // --------------------------------
