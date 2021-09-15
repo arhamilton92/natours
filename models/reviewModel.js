@@ -34,12 +34,9 @@ reviewSchema.post('save', function (next) {
 // ------------------------------------
 
 // QUERY MIDDLEWARE
-reviewSchema.pre(/^find/, function (next) {
-	this.populate({
-		path: 'user',
-		select: 'name photo',
-	});
-	next();
+reviewSchema.post(/save|^findOne/, async (doc, next) => {
+    await doc.constructor.calculateAverageRating(doc.tour);
+    next();
 }); // --------------------------------
 // ------------------------------------
 
@@ -47,7 +44,8 @@ reviewSchema.pre(/^find/, function (next) {
 // ------------------------------------
 
 // STATIC METHOD
-reviewSchema.statics.calculateAverageRatings = async function (tourId) {
+reviewSchema.statics.calculateAverageRating = async function (tourId) {
+	console.log('hello')
 	const stats = await this.aggregate([
 		{
 			$match: { tour: tourId },
