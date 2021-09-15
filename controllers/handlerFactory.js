@@ -3,21 +3,23 @@
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
-exports.getOne = (Model, populateOptions) => {
+exports.getOne = (Model, populateOptions) =>
 	catchAsync(async (req, res, next) => {
 		let query = Model.findById(req.params.id);
-		if(populateOptions) query.populate(populateOptions)
+		if(populateOptions) query = query.populate(populateOptions)
+		//
 		const document = await query
 		//
-		if (!document) {
-			return next(new AppError('No document found with that ID', 404));
-		}
-		res.status(200).json({
+		if (!document) return next(new AppError('No document found with that ID'))
+		//
+		res.status(201).json({
 			status: 'success',
-			data: document,
+			data: {
+				data: document,
+			},
 		});
-	});
-};
+	}); // ---------------------------
+// -----------------------------------
 
 exports.createOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -29,7 +31,8 @@ exports.createOne = (Model) =>
 				data: document,
 			},
 		});
-	}); // --------------------------------
+	}); // ---------------------------
+// -----------------------------------
 
 exports.updateOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -47,7 +50,8 @@ exports.updateOne = (Model) =>
 				data: document,
 			},
 		});
-	}); // --------------------------------
+	}); // ---------------------------
+// -----------------------------------
 
 exports.deleteOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -61,4 +65,5 @@ exports.deleteOne = (Model) =>
 			message: 'document deleted',
 			data: null,
 		});
-	}); // --------------------------------
+	}); // ---------------------------
+// -----------------------------------

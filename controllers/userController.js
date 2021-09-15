@@ -14,6 +14,8 @@ const filterObj = (obj, ...allowedFields) => {
 	});
 	return newObj;
 }; // --------------------------------
+// -----------------------------------
+
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
 	const features = new APIFeatures(User.find(), req.query);
@@ -24,9 +26,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 		results: users.length,
 		data: users,
 	});
-}); // --------------------------------
+}); // -------------------------------
+// -----------------------------------
 
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User)
 // ------------------------------------
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -49,7 +52,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 			user: updatedUser,
 		},
 	});
-}); // --------------------------------
+}); // -------------------------------
+// -----------------------------------
 
 exports.updateUser = (req, res) => {
 	res.status(500).json({
@@ -57,6 +61,7 @@ exports.updateUser = (req, res) => {
 		message: 'route not yet implemented',
 	});
 }; // --------------------------------
+// -----------------------------------
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
 	await User.findByIdAndUpdate(req.user.id, { active: false });
@@ -65,10 +70,10 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 		status: 'success',
 		data: null,
 	});
-}); // --------------------------------
+}); // -------------------------------
+// -----------------------------------
 
 exports.updateUser = factory.updateOne(User)
 // ------------------------------------
-
 exports.deleteUser = factory.deleteOne(User);
 // ------------------------------------
