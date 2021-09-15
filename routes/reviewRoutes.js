@@ -22,7 +22,7 @@ router
 router
 	.route('/:id')
 	.get(getReview)
-	.patch(protect, updateReview)
-	.delete(protect, deleteReview);
+	.patch(protect, restrict(['user', 'admin']), updateReview)
+	.delete(protect, restrict(['user', 'admin']), deleteReview);
 
 module.exports = router;
