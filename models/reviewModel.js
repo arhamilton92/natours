@@ -28,23 +28,27 @@ const reviewSchema = new mongoose.Schema({
 }); // --------------------------------
 
 // DOCUMENT MIDDLEWARE
-reviewSchema.post('save', function (next) {
-	this.constructor.calculateAverageRatings(this.tour);
-}); // --------------------------------
-// ------------------------------------
-
-// QUERY MIDDLEWARE
 reviewSchema.post(/save|^findOne/, async (doc, next) => {
     await doc.constructor.calculateAverageRating(doc.tour);
     next();
 }); // --------------------------------
 // ------------------------------------
 
+// QUERY MIDDLEWARE
+reviewSchema.pre(/^find/, function (next) {
+	this.populate({
+		path: 'user',
+		select: 'name photo',
+	});
+	next();
+});
+// ------------------------------------
+
 // INSTANCE METHOD
 // ------------------------------------
 
 // STATIC METHOD
-reviewSchema.statics.calculateAverageRating = async function (tourId) {
+reviewSchema.statics.calculateAverageRatings = async function (tourId) {
 	console.log('hello')
 	const stats = await this.aggregate([
 		{
