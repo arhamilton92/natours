@@ -1,11 +1,9 @@
 /** @format */
 
 const User = require('../models/userModel');
-const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
-const factory = require('./handlerfactory')
-
+const factory = require('./handlerfactory');
 
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};
@@ -16,20 +14,10 @@ const filterObj = (obj, ...allowedFields) => {
 }; // --------------------------------
 // -----------------------------------
 
+exports.getAllUsers = factory.getAll(User);
+// ------------------------------------
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-	const features = new APIFeatures(User.find(), req.query);
-	const users = await features.query;
-	//
-	res.status(200).json({
-		status: 'success',
-		results: users.length,
-		data: users,
-	});
-}); // -------------------------------
-// -----------------------------------
-
-exports.getUser = factory.getOne(User)
+exports.getUser = factory.getOne(User);
 // ------------------------------------
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -73,7 +61,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 }); // -------------------------------
 // -----------------------------------
 
-exports.updateUser = factory.updateOne(User)
+exports.updateUser = factory.updateOne(User);
 // ------------------------------------
 exports.deleteUser = factory.deleteOne(User);
 // ------------------------------------
