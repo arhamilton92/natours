@@ -22,12 +22,12 @@ router.route('/top-5-tours').get(aliasTopTours, getAllTours);
 router
 	.route('/')
 	.get(getAllTours)
-	.post(protect, restrict(['admin', 'lead']), createTour);
+	.post(protect, restrict(['admin', 'lead-guide']), createTour);
 router
 	.route('/:id')
 	.get(getTour)
-	.patch(protect, restrict(['admin', 'lead']), updateTour)
-	.delete(protect, restrict(['admin', 'lead']), deleteTour);
+	.patch(protect, restrict(['admin', 'lead-guide']), updateTour)
+	.delete(protect, restrict(['admin', 'lead-guide']), deleteTour);
 
 // NESTED
 router.use('/:tourId/reviews', reviewRouter)
