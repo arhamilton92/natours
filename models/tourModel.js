@@ -118,14 +118,19 @@ const tourSchema = new mongoose.Schema(
 	}
 ); // --------------------------------
 
+// INDEX
+tourSchema.index({ price: 1 });
+tourSchema.index({ slug: 1 });
+
 // VIRTUALS
 tourSchema.virtual('durationWeeks').get(function () {
 	return this.duration / 7;
 }); // --------------------------------
-tourSchema.virtual('reviews', { // VIRTUAL POPULATE
+tourSchema.virtual('reviews', {
+	// VIRTUAL POPULATE
 	ref: 'Review',
 	foreignField: 'tour',
-	localField: '_id'
+	localField: '_id',
 }); // --------------------------------
 // ------------------------------------
 
