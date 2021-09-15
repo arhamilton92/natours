@@ -5,6 +5,15 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const factory = require('./handlerfactory');
 
+//MIDDLEWARE
+exports.getMe = (req, res, next) => {
+	console.log('getme')
+	req.params.id = req.user.id;
+	console.log(req.params.id)
+	next();
+}; // --------------------------------
+// -----------------------------------
+
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};
 	Object.keys(obj).forEach((el) => {

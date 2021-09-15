@@ -24,7 +24,7 @@ exports.getOne = (Model, populateOptions) =>
 
 exports.getAll = (Model) =>
 	catchAsync(async (req, res, next) => {
-		// Allow for nested GEt reviews on tour
+		// Allow for nested .get reviews on tour
 		let filter = {}
 		if (req.params.tourId) filter = { tour: req.params.tourId };
 		//
