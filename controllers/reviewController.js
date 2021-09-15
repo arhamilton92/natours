@@ -27,20 +27,14 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 	});
 }); // ----------------------------------
 
-exports.getReview = catchAsync(async (req, res, next) => {
-	const review = await Review.findById(req.params.id).exec();
-	if (!review) {
-		return next(new AppError('No review found with that ID', 404));
-	}
-	res.status(200).json({
-		status: 'success',
-		data: review,
-	});
-}); // ----------------------------------
+exports.getReview = factory.getOne(Review)
+// ------------------------------------
 
 exports.createReview = factory.createOne(Review)
 // ------------------------------------
+
 exports.updateReview = factory.updateOne(Review)
 // ------------------------------------
+
 exports.deleteReview = factory.deleteOne(Review);
 // ------------------------------------

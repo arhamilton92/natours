@@ -26,12 +26,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 	});
 }); // --------------------------------
 
-exports.getUser = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'route not yet implemented',
-	});
-}; // --------------------------------
+exports.getUser = factory.getOne(User);
+// ------------------------------------
 
 exports.updateMe = catchAsync(async (req, res, next) => {
 	if (req.body.password || req.body.passwordConfirm) {
@@ -73,5 +69,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
 exports.updateUser = factory.updateOne(User)
 // ------------------------------------
+
 exports.deleteUser = factory.deleteOne(User);
 // ------------------------------------
