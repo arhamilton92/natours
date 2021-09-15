@@ -17,7 +17,7 @@ const router = express.Router({ mergeParams: true });
 
 router
 	.route('/')
-	.get(protect, getAllReviews)
+	.get(getAllReviews)
 	.post(protect, restrict(['user']), allowNestedRoutes, createReview);
 router
 	.route('/:id')

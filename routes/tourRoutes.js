@@ -21,7 +21,7 @@ router.route('/monthly-plan/:year').get(getMonthlyPlan);
 router.route('/top-5-tours').get(aliasTopTours, getAllTours);
 router
 	.route('/')
-	.get(protect, getAllTours)
+	.get(getAllTours)
 	.post(protect, restrict(['admin', 'lead']), createTour);
 router
 	.route('/:id')
