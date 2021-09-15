@@ -46,7 +46,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.updateUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
-		message: 'route not yet implemented',
+		message: 'Route does not exist. Please use /updateme',
 	});
 }; // --------------------------------
 // -----------------------------------
