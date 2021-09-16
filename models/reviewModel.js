@@ -28,9 +28,9 @@ const reviewSchema = new mongoose.Schema({
 }); // --------------------------------
 
 // DOCUMENT MIDDLEWARE
-reviewSchema.post(/save|^findOne/, async (doc, next) => {
-    await doc.constructor.calculateAverageRating(doc.tour);
-    next();
+reviewSchema.post(/save|^findOneAnd/, async (doc, next) => {
+	await doc.constructor.calculateAverageRating(doc.tour);
+	next();
 }); // --------------------------------
 // ------------------------------------
 
@@ -61,7 +61,6 @@ reviewSchema.statics.calculateAverageRating = async function (tourId) {
 			},
 		},
 	]);
-	console.log(stats);
 	if (stats.length > 0) {
 		await Tour.findByIdAndUpdate(tourId, {
 			ratingsQuantity: stats[0].nRating,
@@ -70,7 +69,8 @@ reviewSchema.statics.calculateAverageRating = async function (tourId) {
 	} else {
 		await Tour.findByIdAndUpdate(tourId, {
 			ratingsQuantity: 0,
-			ratingsAverage: 4.5
+			ratingsAverage: 4.5,
+		});
 	}
 }; // ---------------------------------
 // ------------------------------------
