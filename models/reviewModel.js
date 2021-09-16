@@ -41,7 +41,7 @@ reviewSchema.pre(/^find/, function (next) {
 		select: 'name photo',
 	});
 	next();
-});
+}); // --------------------------------
 // ------------------------------------
 
 // INSTANCE METHOD

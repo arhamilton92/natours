@@ -2,7 +2,7 @@
 
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerfactory')
+const factory = require('./handlerfactory');
 
 // ALIASES
 exports.aliasTopTours = async (req, res, next) => {
@@ -13,16 +13,16 @@ exports.aliasTopTours = async (req, res, next) => {
 }; // --------------------------------
 // -----------------------------------
 
-exports.getAllTours = factory.getAll(Tour)
+exports.getAllTours = factory.getAll(Tour);
 // -----------------------------------
 
-exports.getTour = factory.getOne(Tour, 'reviews')
+exports.getTour = factory.getOne(Tour, 'reviews');
 // ------------------------------------
 
-exports.createTour = factory.createOne(Tour)
+exports.createTour = factory.createOne(Tour);
 // ------------------------------------
 
-exports.updateTour = factory.updateOne(Tour)
+exports.updateTour = factory.updateOne(Tour);
 // ------------------------------------
 
 exports.deleteTour = factory.deleteOne(Tour);
@@ -37,7 +37,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 		{
 			$group: {
 				_id: { $toUpper: '$difficulty' },
-				num: { $sum: 1 },
+				numTours: { $sum: 1 },
 				numRatings: { $sum: '$ratingsQuantity' },
 				avgRating: { $avg: '$ratingsAverage' },
 				avgPrice: { $avg: '$price' },
@@ -48,14 +48,20 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 		{
 			$sort: { avgPrice: 1 },
 		},
+		// {
+		//   $match: { _id: { $ne: 'EASY' } }
+		// }
 	]);
+
 	res.status(200).json({
 		status: 'success',
-		data: stats,
+		data: {
+			stats,
+		},
 	});
-}); // --------------------------------
+});
+// --------------------------------
 // -----------------------------------
-
 
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 	const year = req.params.year * 1;
