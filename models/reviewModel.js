@@ -27,6 +27,10 @@ const reviewSchema = new mongoose.Schema({
 	},
 }); // --------------------------------
 
+// INDEX
+reviewSchema.index( { tour: 1, user: 1 }, { unique: true } );
+// ------------------------------------
+
 // DOCUMENT MIDDLEWARE
 reviewSchema.post(/save|^findOneAnd/, async (doc, next) => {
 	await doc.constructor.calculateAverageRating(doc.tour);
