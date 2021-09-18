@@ -11,6 +11,7 @@ const {
 	deleteTour,
 	getTourStats,
 	getMonthlyPlan,
+	getToursWithin,
 } = require('../controllers/tourController');
 const reviewRouter = require('./reviewRoutes.js');
 
@@ -19,6 +20,11 @@ const router = express.Router();
 router.route('/tour-stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(getMonthlyPlan);
 router.route('/top-5-tours').get(aliasTopTours, getAllTours);
+
+router
+	.route('/within/:distance/center/:latlng/unit/:unit')
+	.get(getToursWithin);
+
 router
 	.route('/')
 	.get(getAllTours)
@@ -30,7 +36,7 @@ router
 	.delete(protect, restrict(['admin', 'lead-guide']), deleteTour);
 
 // NESTED
-router.use('/:tourId/reviews', reviewRouter)
+router.use('/:tourId/reviews', reviewRouter);
 // ------------------------------------
 
 module.exports = router;
