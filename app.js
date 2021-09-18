@@ -15,7 +15,7 @@ const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes')
+const reviewRouter = require('./routes/reviewRoutes');
 // ---------------------------
 
 const app = express();
@@ -24,17 +24,20 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+// ---------------------------
+// GLOBAL MIDDLEWARE
+// ---------------------------
 
-// ---------------------------
-// GLOBAL MIDDLEWARE 
-// ---------------------------
+// serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // env setup
 if (process.env.NODE_ENV === 'development') {
 	console.log('development');
 	app.use(morgan('dev')); // dev logging
 }
 // set security http headers
-app.use(helmet()); 
+app.use(helmet());
 
 // limit ip request rate
 const limiter = rateLimit({
@@ -65,12 +68,17 @@ app.use(
 	})
 );
 
-// serve static files
-app.use(express.static(path.join(__dirname, 'views'))); 
-
 // --------------------------------
 // ROUTER
 // --------------------------------
+// html template rendering
+app.get('/', (req, res) => {
+	res.status(200).render('base', {
+		tour: 'The Forest Hiker',
+		user: 'andrea'
+	});
+});
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);
