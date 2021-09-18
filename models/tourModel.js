@@ -33,6 +33,7 @@ const tourSchema = new mongoose.Schema(
 		},
 		ratingsAverage: {
 			type: Number,
+			set: val => Math.round(val * 10) / 10,
 			default: 4.5,
 			min: [1, 'Rating must be between 1 and 5'],
 			max: [5, 'Rating must be between 1 and 5'],
@@ -79,6 +80,7 @@ const tourSchema = new mongoose.Schema(
 		secret: {
 			type: Boolean,
 			default: false,
+			select: false
 		},
 		startLocation: {
 			// GeoJSON
@@ -121,6 +123,7 @@ const tourSchema = new mongoose.Schema(
 // INDEX
 tourSchema.index({ price: 1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 // VIRTUALS
 tourSchema.virtual('durationWeeks').get(function () {
@@ -144,7 +147,7 @@ tourSchema.pre('save', function (next) {
 
 // QUERY MIDDLEWARE
 tourSchema.pre(/^find/, function (next) {
-	this.find({ secretTour: false });
+	this.find({ secret: false, select: '-__v' });
 	this.start = Date.now();
 	next();
 }); // --------------------------------
