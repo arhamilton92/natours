@@ -20,7 +20,7 @@ const reviewRouter = require('./routes/reviewRoutes')
 
 const app = express();
 
-// SET UP PUG TEMPLATE ENGINE
+// pug template engine set up
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -28,17 +28,15 @@ app.set('views', path.join(__dirname, 'views'));
 // ---------------------------
 // GLOBAL MIDDLEWARE 
 // ---------------------------
-
-// ENV SETUP
+// env setup
 if (process.env.NODE_ENV === 'development') {
-	// DEV LOGGING
 	console.log('development');
-	app.use(morgan('dev')); // DEV LOGGING
+	app.use(morgan('dev')); // dev logging
 }
-// SET SECURITY HTTP HEADERS
+// set security http headers
 app.use(helmet()); 
 
-// LIMIT IP REQUEST RATE
+// limit ip request rate
 const limiter = rateLimit({
 	max: 2000,
 	windowMs: 60 * 60 * 1000,
@@ -46,14 +44,14 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// PARSE & LIMIT REQ BODY SIZE
+// parse and limit body size
 app.use(express.json({ limit: '10kb' }));
 
-// DATA SANITIZATION
+// data sanitization
 app.use(mongoSanitize()); // noSQL query injection
 app.use(xss()); // XSS
 
-// PREVENT PARAM POLLUTION
+// prevent param pollution
 app.use(
 	hpp({
 		whitelist: [
@@ -67,20 +65,21 @@ app.use(
 	})
 );
 
-app.use(express.static(path.join(__dirname, 'views'))); // SERVE STATIC FILES
+// serve static files
+app.use(express.static(path.join(__dirname, 'views'))); 
 
 // --------------------------------
 // ROUTER
 // --------------------------------
-
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);
-//
+
+// incorrect URL error handler
 app.all('*', (req, res, next) => {
-	// incorrect URL error
 	next(new AppError(`Can't find ${req.originalUrl}`, 404));
 });
+// use custom error handling util
 app.use(globalErrorHandler);
 
 module.exports = app;
