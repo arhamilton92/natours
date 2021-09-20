@@ -39,6 +39,18 @@ if (process.env.NODE_ENV === 'development') {
 }
 // set security http headers
 app.use(helmet());
+// set security policy to allow mapbox
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+			baseUri: ["'self'"],
+			fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+			scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+			styleSrc: ["'self'", 'https:', 'http:', "'unsafe-inline'"],
+		},
+	})
+);
 
 // limit ip request rate
 const limiter = rateLimit({
