@@ -149,7 +149,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 		
 		// GRANT ACCESS
 		res.locals.user = currentUser
-		next();
+		return next();
 	}
 	next();
 }); // --------------------------------
