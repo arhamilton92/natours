@@ -135,11 +135,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 	//
 	// CHECK & DECODE TOKEN
 	if (auth && auth.startsWith('Bearer ')) token = auth.split(' ')[1];
+	else if (req.cookies.jwt) {
+		token = req.cookies.jwt;
+	}
 	if (!token) return next(new AppError('You are not logged in.', 401));
 	const decodedToken = await promisify(jwt.verify)(
 		token,
 		process.env.JWT_SECRET
 	);
+	//
 	// CHECK USER EXISTS
 	const freshUser = await User.findById(decodedToken.id);
 	if (!freshUser) return next(new AppError('This user does not exist', 401));
