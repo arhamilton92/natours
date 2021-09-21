@@ -54,6 +54,14 @@ exports.login = catchAsync(async (req, res, next) => {
 	createSendToken(user, 200, res);
 }); // --------------------------------
 
+exports.logout = catchAsync(async (req, res, next) => {
+	res.cookie('jwt', 'logged out', {
+		expires: new Date(Date.now() + 10 * 1000),
+		httpOnly: true,
+	});
+	res.status(200).json({ status: 'success' });
+}); // --------------------------------
+
 exports.forgotPassword = catchAsync(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
 	if (!user)
@@ -137,18 +145,18 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 			req.cookies.jwt,
 			process.env.JWT_SECRET
 		);
-		
+
 		// CHECK USER EXISTS
 		const currentUser = await User.findById(decoded.id);
 		if (!currentUser) return next();
-		
+
 		// CHECK USER HAS NOT CHANGED PASSWORD
 		if (await currentUser.changedPasswordAfter(decoded.iat)) {
 			return next();
 		}
-		
+
 		// GRANT ACCESS
-		res.locals.user = currentUser
+		res.locals.user = currentUser;
 		return next();
 	}
 	next();

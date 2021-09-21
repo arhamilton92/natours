@@ -4,6 +4,7 @@ const express = require('express');
 const {
 	signup,
 	login,
+	logout,
 	forgotPassword,
 	resetPassword,
 	updatePassword,
@@ -25,6 +26,7 @@ const router = express.Router();
 // PUBLIC // NOT PROTECTED
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/logout', logout);
 router.post('/forgotpassword', forgotPassword);
 //
 router.patch('/resetpassword/:token', resetPassword);
