@@ -3155,7 +3155,12 @@ const logout = async () => {
       method: 'GET',
       url: 'http://localhost:8000/api/v1/users/logout'
     });
-    if (res.data.status === 'success') location.reload(true);
+
+    if (res.data.status === 'success') {
+      window.setTimeout(() => {
+        location.assign('/login');
+      }, 100);
+    }
   } catch (error) {
     (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
   }
