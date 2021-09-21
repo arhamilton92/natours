@@ -3173,7 +3173,7 @@ exports.logout = logout;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateData = void 0;
+exports.updateSettings = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -3182,19 +3182,19 @@ var _alerts = require("./alerts");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /** @format */
-const updateData = async (name, email) => {
+// type is either password or data
+const updateSettings = async (data, type) => {
+  const url = type === 'password' ? 'http://localhost:8000/api/v1/users/updatemypassword' : 'http://localhost:8000/api/v1/users/me';
+
   try {
     const res = await (0, _axios.default)({
       method: 'PATCH',
-      url: 'http://localhost:8000/api/v1/users/me',
-      data: {
-        name,
-        email
-      }
+      url,
+      data
     });
 
     if (res.data.status === 'success') {
-      (0, _alerts.showAlert)('success', 'Updated info!');
+      (0, _alerts.showAlert)('success', `Updated ${type}!`);
       window.setTimeout(() => {
         location.reload(true);
       }, 1000);
@@ -3204,7 +3204,7 @@ const updateData = async (name, email) => {
   }
 };
 
-exports.updateData = updateData;
+exports.updateSettings = updateSettings;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -3249,7 +3249,10 @@ if (userDataForm) {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const name = document.getElementById('name').value;
-    (0, _updateSettings.updateData)(name, email);
+    (0, _updateSettings.updateSettings)({
+      name,
+      email
+    }, 'data');
   });
 }
 },{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

@@ -3,7 +3,7 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox.js';
 import { login, logout } from './login.js';
-import { updateData } from './updateSettings.js'
+import { updateSettings } from './updateSettings.js'
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -32,6 +32,6 @@ if (userDataForm) {
 		e.preventDefault()
 		const email = document.getElementById('email').value;
 		const name = document.getElementById('name').value;
-		updateData(name, email)
+		updateSettings({name, email}, 'data')
 	});
 }
