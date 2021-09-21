@@ -102,7 +102,7 @@ app.use('/api/v1/review', reviewRouter);
 
 // incorrect URL error handler
 app.all('*', (req, res, next) => {
-	next(new AppError(`Can't find ${req.originalUrl}`, 404));
+	next(new AppError(`Page does not exist.`, 404));
 });
 // use custom error handling util
 app.use(globalErrorHandler);
