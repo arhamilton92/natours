@@ -3112,7 +3112,7 @@ exports.showAlert = showAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.login = void 0;
+exports.logout = exports.login = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -3120,7 +3120,11 @@ var _alerts = require("./alerts");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint-disable */
+/**
+ * /* eslint-disable
+ *
+ * @format
+ */
 const login = async (email, password) => {
   try {
     const res = await (0, _axios.default)({
@@ -3144,6 +3148,20 @@ const login = async (email, password) => {
 };
 
 exports.login = login;
+
+const logout = async () => {
+  try {
+    const res = await (0, _axios.default)({
+      method: 'GET',
+      url: 'http://localhost:8000/api/v1/users/logout'
+    });
+    if (res.data.status === 'success') location.reload(true);
+  } catch (error) {
+    (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
+  }
+};
+
+exports.logout = logout;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -3159,7 +3177,8 @@ var _login = require("./login.js");
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
-const loginForm = document.querySelector('.form'); // DELEGATION
+const loginForm = document.querySelector('.form');
+const logOutBtn = document.querySelector('.nav__el--logout'); // DELEGATION
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -3174,6 +3193,10 @@ if (loginForm) {
     (0, _login.login)(email, password);
   });
 }
+
+if (logOutBtn) logOutBtn.addEventListener('click', () => {
+  (0, _login.logout)();
+});
 },{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
