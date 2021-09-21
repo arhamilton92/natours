@@ -4,13 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
 exports.getOverview = catchAsync(async (req, res) => {
-	// get tours data
 	const tours = await Tour.find();
-
-	// build template
-
-	//render template with data
-
 	res.status(200).render('overview', {
 		title: 'All Tours',
 		tours,
