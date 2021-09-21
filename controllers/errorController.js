@@ -29,33 +29,46 @@ const handleJWTExpired = () =>
 const sendErrorDev = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
 		//API
-		res.status(err.statusCode).json({
+		return res.status(err.statusCode).json({
 			status: err.status,
 			message: err.message,
 			error: err,
 			stack: err.stack,
 		});
-	} else {
-		// RENDERED WEBSITE
-		res.status(err.statusCode).render('error', {
-			title: 'Something went wrong',
-			msg: err.message
-		})
 	}
+	// RENDERED WEBSITE
+	res.status(err.statusCode).render('error', {
+		title: 'Something went wrong',
+		msg: err.message,
+	});
 }; // --------------------------------
 
-const sendErrorProd = (err,req, res) => {
-	if (err.isOperational) {
-		// OPERATIONAL ERROR
-		res.status(err.statusCode).json({
-			status: err.status,
-			message: err.message,
-		});
-	} else {
+const sendErrorProd = (err, req, res) => {
+	if (req.originalUrl.startsWith('/api')) {
+		// API
+		if (err.isOperational) {
+			// OPERATIONAL ERROR
+			return res.status(err.statusCode).json({
+				status: err.status,
+				message: err.message,
+			});
+		}
 		// PROGRAMMING ERROR
-		res.status(500).json({
+		return res.status(500).json({
 			status: 'error',
 			message: 'Something went wrong',
+		});
+	} else {
+		// RENDERED WEBSITE
+		if (err.isOperational) {
+			return res.status(err.statusCode).render('error', {
+				title: 'Something went wrong',
+				msg: err.message,
+			});
+		}
+		return res.status(err.statusCode).render('error', {
+			title: 'Something went wrong',
+			msg: err.message,
 		});
 	}
 }; // --------------------------------
