@@ -129,6 +129,31 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 	createSendToken(user, 200, res);
 }); // --------------------------------
 
+// Only for rendered pages, no errors
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+	if (req.cookies.jwt) {
+		// VERIFY TOKEN
+		const decoded = await promisify(jwt.verify)(
+			req.cookies.jwt,
+			process.env.JWT_SECRET
+		);
+		
+		// CHECK USER EXISTS
+		const currentUser = await User.findById(decoded.id);
+		if (!currentUser) return next();
+		
+		// CHECK USER HAS NOT CHANGED PASSWORD
+		if (await currentUser.changedPasswordAfter(decoded.iat)) {
+			return next();
+		}
+		
+		// GRANT ACCESS
+		res.locals.user = currentUser
+		next();
+	}
+	next();
+}); // --------------------------------
+
 exports.protect = catchAsync(async (req, res, next) => {
 	const auth = req.headers.authorization;
 	let token;
