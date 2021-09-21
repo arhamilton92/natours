@@ -3224,7 +3224,8 @@ var _updateSettings = require("./updateSettings.js");
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
-const userDataForm = document.querySelector('.form-user-data'); // DELEGATION
+const userDataForm = document.querySelector('.form-user-data');
+const userPasswordForm = document.querySelector('.form-user-settings'); // DELEGATION
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -3253,6 +3254,21 @@ if (userDataForm) {
       name,
       email
     }, 'data');
+  });
+}
+
+if (userPasswordForm) {
+  userPasswordForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const checkPassword = document.getElementById('password-current').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    const newPassword = document.getElementById('password').value;
+    console.log(checkPassword, passwordConfirm, newPassword);
+    (0, _updateSettings.updateSettings)({
+      checkPassword,
+      passwordConfirm,
+      newPassword
+    }, 'password');
   });
 }
 },{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
