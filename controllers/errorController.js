@@ -26,16 +26,22 @@ const handleJWTExpired = () =>
 	new AppError('Expired token. Please log in again.', 401);
 // ------------------------------------
 
-const sendErrorDev = (err, res) => {
-	res.status(err.statusCode).json({
-		status: err.status,
-		message: err.message,
-		error: err,
-		stack: err.stack,
-	});
+const sendErrorDev = (err, req, res) => {
+	if (req.originalUrl.startsWith('/api')) {
+		res.status(err.statusCode).json({
+			status: err.status,
+			message: err.message,
+			error: err,
+			stack: err.stack,
+		});
+	} else {
+		res.status(err.status).render('error', {
+			title: 'Something went wrong'
+		})
+	}
 }; // --------------------------------
 
-const sendErrorProd = (err, res) => {
+const sendErrorProd = (err,req, res) => {
 	if (err.isOperational) {
 		// OPERATIONAL ERROR
 		res.status(err.statusCode).json({
@@ -56,7 +62,7 @@ module.exports = (err, req, res, next) => {
 	err.status = err.status || 'error';
 	//
 	if (process.env.NODE_ENV === 'development') {
-		sendErrorDev(err, res);
+		sendErrorDev(err, req, res);
 	} else if (process.env.NODE_ENV === 'production') {
 		let error = Object.assign(err);
 		//
@@ -66,6 +72,6 @@ module.exports = (err, req, res, next) => {
 		if (error.code === 11000) error = handleDuplicateFieldsDB(error);
 		if (error.name === 'JsonWebTokenError') error = handleJWTError();
 		if (error.name === 'TokenExpiredError') error = handleJWTExpired();
-		sendErrorProd(error, res);
+		sendErrorProd(error, req, res);
 	}
 }; // --------------------------------
