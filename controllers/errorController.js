@@ -68,7 +68,7 @@ const sendErrorProd = (err, req, res) => {
 		}
 		return res.status(err.statusCode).render('error', {
 			title: 'Something went wrong',
-			msg: err.message,
+			msg: 'Please try again later.'
 		});
 	}
 }; // --------------------------------
