@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 // UTILS
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -63,6 +63,12 @@ app.use('/api', limiter);
 
 // parse and limit body size
 app.use(express.json({ limit: '10kb' }));
+app.use(
+	express.urlencoded({
+		extended: true,
+		limit: '10kb',
+	})
+);
 
 // parse cookies
 app.use(cookieParser());
