@@ -3196,7 +3196,7 @@ const updateSettings = async (data, type) => {
     if (res.data.status === 'success') {
       (0, _alerts.showAlert)('success', `Updated ${type}!`);
       window.setTimeout(() => {
-        location.reload(true);
+        if (type !== 'password') location.reload(true);
       }, 1000);
     }
   } catch (error) {

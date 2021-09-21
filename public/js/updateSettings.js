@@ -17,8 +17,8 @@ export const updateSettings = async (data, type) => {
 		});
 		if (res.data.status === 'success') {
 			showAlert('success', `Updated ${type}!`);
-			window.setTimeout(() => {
-				location.reload(true);
+            window.setTimeout(() => {
+                if (type !== 'password') location.reload(true);
 			}, 1000);
 		}
 	} catch (error) {
