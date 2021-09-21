@@ -39,8 +39,8 @@ locations.forEach((loc) => {
 
 map.fitBounds(bounds, {
 	padding: {
-		top: 150,
-		bottom: 150,
+		top: 200,
+		bottom: 200,
 		left: 50,
 		right: 50,
 	},
