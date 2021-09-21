@@ -3167,6 +3167,44 @@ const logout = async () => {
 };
 
 exports.logout = logout;
+},{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"updateSettings.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateData = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alerts = require("./alerts");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** @format */
+const updateData = async (name, email) => {
+  try {
+    const res = await (0, _axios.default)({
+      method: 'PATCH',
+      url: 'http://localhost:8000/api/v1/users/me',
+      data: {
+        name,
+        email
+      }
+    });
+
+    if (res.data.status === 'success') {
+      (0, _alerts.showAlert)('success', 'Updated info!');
+      window.setTimeout(() => {
+        location.reload(true);
+      }, 1000);
+    }
+  } catch (error) {
+    (0, _alerts.showAlert)('error', error.response.data.message);
+  }
+};
+
+exports.updateData = updateData;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -3180,10 +3218,13 @@ var _mapbox = require("./mapbox.js");
 
 var _login = require("./login.js");
 
+var _updateSettings = require("./updateSettings.js");
+
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
-const logOutBtn = document.querySelector('.nav__el--logout'); // DELEGATION
+const logOutBtn = document.querySelector('.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data'); // DELEGATION
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -3202,7 +3243,16 @@ if (loginForm) {
 if (logOutBtn) logOutBtn.addEventListener('click', () => {
   (0, _login.logout)();
 });
-},{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+if (userDataForm) {
+  userDataForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    (0, _updateSettings.updateData)(name, email);
+  });
+}
+},{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
