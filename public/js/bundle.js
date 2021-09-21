@@ -3258,17 +3258,21 @@ if (userDataForm) {
 }
 
 if (userPasswordForm) {
-  userPasswordForm.addEventListener('submit', e => {
+  userPasswordForm.addEventListener('submit', async e => {
     e.preventDefault();
     const checkPassword = document.getElementById('password-current').value;
     const passwordConfirm = document.getElementById('password-confirm').value;
     const newPassword = document.getElementById('password').value;
-    console.log(checkPassword, passwordConfirm, newPassword);
-    (0, _updateSettings.updateSettings)({
+    document.querySelector('.btn--save').innerHTML = 'Updating...';
+    await (0, _updateSettings.updateSettings)({
       checkPassword,
       passwordConfirm,
       newPassword
     }, 'password');
+    document.getElementById('password-current').value = '';
+    document.getElementById('password-confirm').value = '';
+    document.getElementById('password').value = '';
+    document.querySelector('.btn--save').innerHTML = 'Save password';
   });
 }
 },{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
