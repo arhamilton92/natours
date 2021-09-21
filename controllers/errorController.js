@@ -28,6 +28,7 @@ const handleJWTExpired = () =>
 
 const sendErrorDev = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
+		//API
 		res.status(err.statusCode).json({
 			status: err.status,
 			message: err.message,
@@ -35,8 +36,10 @@ const sendErrorDev = (err, req, res) => {
 			stack: err.stack,
 		});
 	} else {
-		res.status(err.status).render('error', {
-			title: 'Something went wrong'
+		// RENDERED WEBSITE
+		res.status(err.statusCode).render('error', {
+			title: 'Something went wrong',
+			msg: err.message
 		})
 	}
 }; // --------------------------------
