@@ -11,23 +11,17 @@ exports.aliasTopTours = async (req, res, next) => {
 	req.query.sort = '-ratingsAverage,price';
 	req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
 	next();
-}; // --------------------------------
-// -----------------------------------
+};
 
 exports.getAllTours = factory.getAll(Tour);
-// -----------------------------------
 
 exports.getTour = factory.getOne(Tour, 'reviews');
-// ------------------------------------
 
 exports.createTour = factory.createOne(Tour);
-// ------------------------------------
 
 exports.updateTour = factory.updateOne(Tour);
-// ------------------------------------
 
 exports.deleteTour = factory.deleteOne(Tour);
-// ------------------------------------
 
 // AGGREGATION
 exports.getTourStats = catchAsync(async (req, res, next) => {
@@ -60,8 +54,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 			stats,
 		},
 	});
-}); // -------------------------------
-// -----------------------------------
+});
 
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 	const year = req.params.year * 1;
@@ -101,8 +94,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 			plan,
 		},
 	});
-}); // --------------------------------
-// ------------------------------------
+});
 
 exports.getToursWithin = catchAsync(async (req, res, next) => {
 	const { distance, latlng, unit } = req.params;
@@ -127,8 +119,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
 		results: tours.length,
 		data: tours,
 	});
-}); // --------------------------------
-// ------------------------------------
+});
 
 exports.getDistances = catchAsync(async (req, res, next) => {
 	const { latlng, unit } = req.params;
@@ -169,5 +160,4 @@ exports.getDistances = catchAsync(async (req, res, next) => {
 		results: distances.length,
 		data: distances,
 	});
-}); // --------------------------------
-// ------------------------------------
+});

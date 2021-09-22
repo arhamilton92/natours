@@ -18,7 +18,6 @@ const viewRouter = require('./routes/viewRoutes');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
-// ---------------------------
 
 const app = express();
 
@@ -26,12 +25,9 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-// ---------------------------
-// GLOBAL MIDDLEWARE
-// ---------------------------
-
-// serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+// v GLOBAL MIDDLEWARE v -------------------
+// -----------------------------------------
+app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 
 // env setup
 if (process.env.NODE_ENV === 'development') {
@@ -90,17 +86,11 @@ app.use(
 		],
 	})
 );
+// -----------------------------------------
+// ^ GLOBAL MIDDLEWARE ^ -------------------
 
-// test middleware
-// app.use((req, res, next) => {
-// 	console.log(req.cookies)
-// 	next()
-// })
-
-// --------------------------------
-// ROUTER
-// --------------------------------
-
+// v ROUTER v -------------------
+// -----------------------------------------
 app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
@@ -112,5 +102,8 @@ app.all('*', (req, res, next) => {
 });
 // use custom error handling util
 app.use(globalErrorHandler);
+// -----------------------------------------
+// ^ ROUTER ^ ------------------------------
 
 module.exports = app;
+

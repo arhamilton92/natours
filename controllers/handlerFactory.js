@@ -19,8 +19,7 @@ exports.getOne = (Model, populateOptions) =>
 				data: document,
 			},
 		});
-	}); // ---------------------------
-// -----------------------------------
+	});
 
 exports.getAll = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -40,8 +39,7 @@ exports.getAll = (Model) =>
 			results: documents.length,
 			data: documents,
 		});
-	}); // ---------------------------
-// -----------------------------------
+	}); 
 
 exports.createOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -53,8 +51,7 @@ exports.createOne = (Model) =>
 				data: document,
 			},
 		});
-	}); // ---------------------------
-// -----------------------------------
+	});
 
 exports.updateOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -72,8 +69,7 @@ exports.updateOne = (Model) =>
 				data: document,
 			},
 		});
-	}); // ---------------------------
-// -----------------------------------
+	}); 
 
 exports.deleteOne = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -87,5 +83,4 @@ exports.deleteOne = (Model) =>
 			message: 'document deleted',
 			data: null,
 		});
-	}); // ---------------------------
-// -----------------------------------
+	});

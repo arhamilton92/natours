@@ -1,30 +1,34 @@
 /** @format */
 const AppError = require('../utils/AppError');
 
-// MONGODB/MONGOOSE ERROR HANDLING
+// v MONGO ERROR v 
+// -----------------------------------------
 const handleCastErrorDB = (err) => {
 	const message = `invalid ${err.path}: ${err.value}`;
 	return new AppError(message, 400);
-}; // --------------------------------
+};
 const handleValidationErrorDB = (err) => {
 	const errors = Object.values(err.errors).map((el) => el.message);
 	const message = `Invalid input data: ${errors.join('. ')}`;
 	return new AppError(message, 400);
-}; // --------------------------------
+};
 const handleDuplicateFieldsDB = (err) => {
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 	console.log(value);
 	const message = `Duplicate field value: ${value}.`;
 	return new AppError(message, 400);
-}; // ---------------------------------
-// ------------------------------------
+};
+// -----------------------------------------
+// ^ MONGO ERROR ^ 
 
-// JWT ERRORS
+// v JWT ERROR v 
+// -----------------------------------------
 const handleJWTError = () =>
 	new AppError('Invalid token. Please log in again.', 401);
 const handleJWTExpired = () =>
 	new AppError('Expired token. Please log in again.', 401);
-// ------------------------------------
+// -----------------------------------------
+// ^ JWT ERROR ^ 
 
 const sendErrorDev = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
@@ -41,7 +45,7 @@ const sendErrorDev = (err, req, res) => {
 		title: 'Something went wrong',
 		msg: err.message,
 	});
-}; // --------------------------------
+};
 
 const sendErrorProd = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
@@ -68,10 +72,10 @@ const sendErrorProd = (err, req, res) => {
 		}
 		return res.status(err.statusCode).render('error', {
 			title: 'Something went wrong',
-			msg: 'Please try again later.'
+			msg: 'Please try again later.',
 		});
 	}
-}; // --------------------------------
+};
 
 module.exports = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 500;
@@ -90,4 +94,4 @@ module.exports = (err, req, res, next) => {
 		if (error.name === 'TokenExpiredError') error = handleJWTExpired();
 		sendErrorProd(error, req, res);
 	}
-}; // --------------------------------
+};

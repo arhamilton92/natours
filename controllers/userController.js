@@ -8,9 +8,9 @@ const factory = require('./handlerfactory');
 
 const upload = multer({ dest: 'public/img/users' })
 
-// -----------------------------------------
-// v MIDDLEWARE v --------------------------
 
+// v MIDDLEWARE v --------------------------
+// -----------------------------------------
 exports.getMe = (req, res, next) => {
 	console.log('getme')
 	req.params.id = req.user.id;
@@ -19,9 +19,9 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.uploadUserPhoto = upload.single('photo')
-
-// ^ MIDDLEWARE ^ --------------------------
 // -----------------------------------------
+// ^ MIDDLEWARE ^ --------------------------
+
 
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};

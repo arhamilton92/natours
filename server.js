@@ -11,10 +11,9 @@ process.on('uncaughtException', (err) => {
 	console.log('uncaught exception');
 	console.log(err.name, err.message);
 	process.exit();
-}); // --------------------------------
-// ------------------------------------
+});
 
-// DATABASE
+// DATABASE CONNECTION
 const password = process.env.DATABASE_PASSWORD;
 const DB = process.env.DATABASE.replace('<PASSWORD>', password);
 mongoose
@@ -23,14 +22,12 @@ mongoose
 		useUnifiedTopology: true,
 	})
 	.then(console.log('DB connection successful!'));
-// ------------------------------------
 
-// SERVER
+// SERVER START
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
 	console.log(`App running on port ${port}`);
-}); // --------------------------------
-// ------------------------------------
+});
 
 // UNHANDLED REJECTION HANDLER
 process.on('unhandledRejection', (err) => {
@@ -38,5 +35,4 @@ process.on('unhandledRejection', (err) => {
 	server.close(() => {
 		process.exit(1);
 	});
-}); // --------------------------------
-// ------------------------------------
+});
