@@ -1,10 +1,12 @@
 /** @format */
 
 const User = require('../models/userModel');
-const multer = require('multer'); // file uploads
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const factory = require('./handlerfactory');
+
+const multer = require('multer'); // file uploads
+const sharp = require('sharp'); // image processing
 
 // MULTER SETUP
 const multerStorage = multer.diskStorage({
@@ -37,6 +39,9 @@ exports.getMe = (req, res, next) => {
 	next();
 };
 exports.uploadUserPhoto = upload.single('photo');
+exports.resizeUserPhoto = (req, res, next) => {
+	if (!req.file) return next();
+};
 // -----------------------------------------
 // ^ MIDDLEWARE ^ --------------------------
 
@@ -60,7 +65,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 			)
 		);
 	}
-	const filteredBody = filterObj(req.body, 'name', 'email',);
+	const filteredBody = filterObj(req.body, 'name', 'email');
 	if (req.file) filteredBody.photo = req.file.filename;
 	const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
 		new: true,
