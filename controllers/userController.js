@@ -1,18 +1,27 @@
 /** @format */
 
 const User = require('../models/userModel');
+const multer = require('multer'); // file uploads
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const factory = require('./handlerfactory');
 
-//MIDDLEWARE
+const upload = multer({ dest: 'public/img/users' })
+
+// -----------------------------------------
+// v MIDDLEWARE v --------------------------
+
 exports.getMe = (req, res, next) => {
 	console.log('getme')
 	req.params.id = req.user.id;
 	console.log(req.params.id)
 	next();
-}; // --------------------------------
-// -----------------------------------
+};
+
+exports.uploadUserPhoto = upload.single('photo')
+
+// ^ MIDDLEWARE ^ --------------------------
+// -----------------------------------------
 
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};
@@ -20,16 +29,15 @@ const filterObj = (obj, ...allowedFields) => {
 		if (allowedFields.includes(el)) newObj[el] = obj[el];
 	});
 	return newObj;
-}; // --------------------------------
-// -----------------------------------
+}; 
 
 exports.getAllUsers = factory.getAll(User);
-// ------------------------------------
 
 exports.getUser = factory.getOne(User);
-// ------------------------------------
 
 exports.updateMe = catchAsync(async (req, res, next) => {
+	console.log(req.file);
+	console.log(req.body);
 	if (req.body.password || req.body.passwordConfirm) {
 		return next(
 			new AppError(
@@ -49,16 +57,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 			user: updatedUser,
 		},
 	});
-}); // -------------------------------
-// -----------------------------------
+});
 
 exports.updateUser = (req, res) => {
 	res.status(500).json({
 		status: 'error',
 		message: 'Route does not exist. Please use /updateme',
 	});
-}; // --------------------------------
-// -----------------------------------
+};
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
 	await User.findByIdAndUpdate(req.user.id, { active: false });
@@ -67,10 +73,8 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 		status: 'success',
 		data: null,
 	});
-}); // -------------------------------
-// -----------------------------------
+});
 
 exports.updateUser = factory.updateOne(User);
-// ------------------------------------
+
 exports.deleteUser = factory.deleteOne(User);
-// ------------------------------------
