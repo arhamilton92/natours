@@ -5,11 +5,39 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerfactory');
 
+const multer = require('multer'); // file uploads
+const sharp = require('sharp'); // image processing
+
 // ALIASES
 exports.aliasTopTours = async (req, res, next) => {
 	req.query.limit = '5';
 	req.query.sort = '-ratingsAverage,price';
 	req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+	next();
+};
+
+// MULTER CONFIG
+const multerStorage = multer.memoryStorage();
+const multerFilter = (req, file, cb) => {
+	if (file.mimetype.startsWith('image')) {
+		cb(null, true);
+	} else {
+		cb(new AppError('Not an image! Please upload an image file.', 400), false);
+	}
+};
+const upload = multer({
+	storage: multerStorage,
+	fileFilter: multerFilter,
+});
+
+// MIDDLEWARE
+exports.uploadTourImages = upload.fields([
+	{ name: 'imageCover', maxCount: 1 },
+	{ name: 'images', maxCount: 3 },
+]);
+
+exports.resizeTourImages = (req, res, next) => {
+	console.log(req.files);
 	next();
 };
 
@@ -124,7 +152,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
 exports.getDistances = catchAsync(async (req, res, next) => {
 	const { latlng, unit } = req.params;
 	const [lat, lng] = latlng.split(',');
-	const multiplier = unit === 'mi' ? 0.000621371 : 0.001
+	const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
 	//
 	if (!lat || !lng) {
 		next(
@@ -143,15 +171,15 @@ exports.getDistances = catchAsync(async (req, res, next) => {
 					coordinates: [lng * 1, lat * 1],
 				},
 				distanceField: 'distance',
-				distanceMultiplier: multiplier
+				distanceMultiplier: multiplier,
 			},
 		},
 		{
 			$project: {
 				distance: 1,
 				name: 1,
-				startLocation: '$startLocation.description'
-			}
+				startLocation: '$startLocation.description',
+			},
 		},
 	]);
 	//
