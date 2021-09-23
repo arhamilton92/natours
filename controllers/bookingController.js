@@ -8,10 +8,10 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 	const tour = await Tour.findById(req.params.tourId);
 	if (!tour) return next(new AppError('There is no tour with that id!', 404));
-	stripe.checkout.session.create({
+	const session = stripe.checkout.sessions.create({
 		payment_method_types: ['card'],
-		success_url: `${req.protocol}:?/${req.get('host')}/`,
-		cancel_url: `${req.protocol}:?/${req.get('host')}/tour/${tour.slug}`,
+		success_url: `${req.protocol}://${req.get('host')}/`,
+		cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
 		customer_email: req.user.email,
 		client_reference_id: req.params.tourId,
 		line_items: [
@@ -28,6 +28,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 	//
 	return res.status(200).json({
 		status: 'success',
-		data: tour,
+		session
 	});
 });
