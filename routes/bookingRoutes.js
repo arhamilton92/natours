@@ -2,13 +2,14 @@
 
 const express = require('express');
 const {
-    getBookings
+	protect
+} = require('../controllers/authController');
+const {
+	getCheckoutSession
 } = require('../controllers/bookingController');
 
 const router = express.Router();
 
-router
-	.route('/')
-	.get(getBookings)
+router.get('/checkout-session/:tourID', protect, getCheckoutSession)
 
 module.exports = router;
