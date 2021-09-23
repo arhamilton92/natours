@@ -12,7 +12,7 @@ const signToken = (id) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRES_IN,
 	});
-}; 
+};
 
 const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
@@ -33,13 +33,16 @@ const createSendToken = (user, statusCode, res) => {
 		token,
 		data: user,
 	});
-}; 
+};
 
 exports.signup = catchAsync(async (req, res, next) => {
 	const { name, email, password, passwordConfirm } = req.body;
 	const newUser = await User.create({ name, email, password, passwordConfirm });
+	const url = `${req.protocol}://${req.get('host')}/me`;
+	console.log(url)
+	await new Email(newUser, url).sendWelcome();
 	createSendToken(newUser, 201, res);
-}); 
+});
 
 exports.login = catchAsync(async (req, res, next) => {
 	const { email, password } = req.body;
@@ -52,7 +55,7 @@ exports.login = catchAsync(async (req, res, next) => {
 		return next(new AppError('Incorrect email or password', 401));
 	}
 	createSendToken(user, 200, res);
-}); 
+});
 
 exports.logout = catchAsync(async (req, res, next) => {
 	res.cookie('jwt', 'logged out', {
@@ -60,7 +63,7 @@ exports.logout = catchAsync(async (req, res, next) => {
 		httpOnly: true,
 	});
 	res.status(200).json({ status: 'success' });
-}); 
+});
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
 	const user = await User.findOne({ email: req.body.email });
@@ -100,7 +103,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 			)
 		);
 	}
-}); 
+});
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
 	const hashedToken = crypto
@@ -120,7 +123,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 	user.passwordResetExpires = undefined;
 	await user.save();
 	createSendToken(user, 200, res);
-}); 
+});
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.user.id).select('+password');
@@ -135,36 +138,36 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 	await user.save();
 	//
 	createSendToken(user, 200, res);
-}); 
+});
 
 // Only for rendered pages, no catchAsync
 exports.isLoggedIn = async (req, res, next) => {
 	if (req.cookies.jwt) {
 		try {
 			// VERIFY TOKEN
-		const decoded = await promisify(jwt.verify)(
-			req.cookies.jwt,
-			process.env.JWT_SECRET
-		);
-		//
-		// CHECK USER EXISTS
-		const currentUser = await User.findById(decoded.id);
-		if (!currentUser) return next();
-		//
-		// CHECK USER HAS NOT CHANGED PASSWORD
-		if (await currentUser.changedPasswordAfter(decoded.iat)) {
+			const decoded = await promisify(jwt.verify)(
+				req.cookies.jwt,
+				process.env.JWT_SECRET
+			);
+			//
+			// CHECK USER EXISTS
+			const currentUser = await User.findById(decoded.id);
+			if (!currentUser) return next();
+			//
+			// CHECK USER HAS NOT CHANGED PASSWORD
+			if (await currentUser.changedPasswordAfter(decoded.iat)) {
+				return next();
+			}
+			//
+			// GRANT ACCESS
+			res.locals.user = currentUser;
 			return next();
-		}
-		//
-		// GRANT ACCESS
-		res.locals.user = currentUser;
-		return next();
 		} catch (error) {
-			return next()
+			return next();
 		}
 	}
 	next();
-}; 
+};
 
 exports.protect = catchAsync(async (req, res, next) => {
 	const auth = req.headers.authorization;
@@ -195,7 +198,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 	req.user = freshUser;
 	res.locals.user = freshUser;
 	next();
-}); 
+});
 
 exports.restrict = (roles) => {
 	return (req, res, next) => {
@@ -207,4 +210,4 @@ exports.restrict = (roles) => {
 		//
 		next();
 	};
-}; 
+};
