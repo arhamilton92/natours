@@ -39,7 +39,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 	const { name, email, password, passwordConfirm } = req.body;
 	const newUser = await User.create({ name, email, password, passwordConfirm });
 	const url = `${req.protocol}://${req.get('host')}/me`;
-	console.log(url)
 	await new Email(newUser, url).sendWelcome();
 	createSendToken(newUser, 201, res);
 });
@@ -129,7 +128,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.user.id).select('+password');
 	//
 	if (!(await user.correctPassword(req.body.checkPassword, user.password))) {
-		console.log('incorrect password');
 		return next(new AppError('incorrect password', 401));
 	}
 	//
