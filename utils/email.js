@@ -16,7 +16,7 @@ const {
 module.exports = class Email {
 	constructor(user, url) {
 		this.to = user.email;
-		this.firstname = user.name.split(' ')[0];
+		this.firstName = user.name.split(' ')[0];
 		this.url = url;
 		this.from = `Andrea Hamilton <${EMAIL_FROM}>`;
 	}
