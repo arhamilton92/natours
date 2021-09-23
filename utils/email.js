@@ -54,4 +54,7 @@ module.exports = class Email {
 	sendWelcome() {
 		this.send('welcome', 'Welcome to Natours!')
 	}
+	sendPasswordReset() {
+		this.send('passwordReset', 'Your password reset token (valid for 10 minutes)')
+	}
 };
