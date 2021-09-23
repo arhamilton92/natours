@@ -11,6 +11,8 @@ const {
 	EMAIL_USERNAME,
 	EMAIL_PASSWORD,
 	NODE_ENV,
+	SENDGRID_USERNAME,
+	SENDGRID_PASSWORD
 } = process.env;
 
 module.exports = class Email {
@@ -22,8 +24,13 @@ module.exports = class Email {
 	}
 	transport() {
 		if (NODE_ENV === 'production') {
-			// sendgrid
-			return 1;
+			return nodemailer.createTransport({
+				service: 'SendGrid',
+				auth: {
+					user: SENDGRID_USERNAME,
+					pass: SENDGRID_PASSWORD
+				}
+			})
 		}
 		return nodemailer.createTransport({
 			host: EMAIL_HOST,
