@@ -18,6 +18,7 @@ const viewRouter = require('./routes/viewRoutes');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -95,6 +96,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // incorrect URL error handler
 app.all('*', (req, res, next) => {
@@ -106,4 +108,3 @@ app.use(globalErrorHandler);
 // ^ ROUTER ^ ------------------------------
 
 module.exports = app;
-
