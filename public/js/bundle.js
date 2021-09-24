@@ -3205,6 +3205,40 @@ const updateSettings = async (data, type) => {
 };
 
 exports.updateSettings = updateSettings;
+},{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"stripe.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.bookTour = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alerts = require("./alerts");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** @format */
+const bookTour = async tourId => {
+  // get checkout session from API
+  try {
+    const session = await (0, _axios.default)({
+      method: 'GET',
+      url: `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`
+    });
+
+    if (session.data.status === 'success') {
+      console.log(session);
+    }
+  } catch (error) {
+    (0, _alerts.showAlert)('error', error.response.data.message);
+  } //
+  // create checkout form + charge credit card
+
+};
+
+exports.bookTour = bookTour;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -3220,12 +3254,15 @@ var _login = require("./login.js");
 
 var _updateSettings = require("./updateSettings.js");
 
+var _stripe = require("./stripe.js");
+
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
-const userPasswordForm = document.querySelector('.form-user-settings'); // DELEGATION
+const userPasswordForm = document.querySelector('.form-user-settings');
+const bookBtn = document.getElementById('book-tour'); // DELEGATION
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
@@ -3275,7 +3312,17 @@ if (userPasswordForm) {
     document.querySelector('.btn--save').innerHTML = 'Save password';
   });
 }
-},{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+if (bookBtn) {
+  bookBtn.addEventListener('click', e => {
+    e.target.textContent = 'Processing...';
+    const {
+      tourId
+    } = e.target.dataset;
+    (0, _stripe.bookTour)(tourId);
+  });
+}
+},{"core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","./mapbox.js":"mapbox.js","./login.js":"login.js","./updateSettings.js":"updateSettings.js","./stripe.js":"stripe.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

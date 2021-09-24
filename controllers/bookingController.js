@@ -9,7 +9,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 	// get booked tour
 	const tour = await Tour.findById(req.params.tourId);
 	if (!tour) return next(new AppError('There is no tour with that id!', 404));
-
+	//
 	// create checkout session
 	const session = await stripe.checkout.sessions.create({
 		payment_method_types: ['card'],
