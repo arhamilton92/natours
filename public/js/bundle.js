@@ -3220,6 +3220,8 @@ var _alerts = require("./alerts");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /** @format */
+
+/*eslint-disable*/
 const bookTour = async tourId => {
   // get checkout session from API
   const stripe = Stripe('pk_test_51Jcx3mI20R6TlRgOtSizmRe5rWEEmFO56L1C4DBoC2r99xruz5vKoHpZPQS4H0FbbUy7xNsDw4GK3WnKGgPymSn600ocF1wbte');
