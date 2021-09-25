@@ -36,7 +36,9 @@ app.use(cors({
 	origin: process.env.CORS_ORIGIN
 }))
 
-app.options('*', cors())
+app.options('*', cors({
+	origin: process.env.CORS_ORIGIN
+}))
 
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 // app.options('/api/v1/tours', cors())
