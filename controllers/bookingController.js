@@ -74,7 +74,9 @@ exports.webhookCheckout = async (req, res, next) => {
 			signature,
 			process.env.STRIPE_WEBHOOK_SECRET
 		);
+		console.log(event)
 		if (event.type === 'checkout.session.completed') {
+			console.log('event success')
 			createBookingCheckout(event.data.object);
 		}
 		res.status(200).json({ recieved: true });
