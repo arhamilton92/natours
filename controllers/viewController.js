@@ -5,6 +5,15 @@ const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+// MIDDLEWARE
+exports.alerts = (req, res, next) => {
+	const { alert } = req.query;
+	if (alert === 'booking')
+		res.locals.alert =
+			"Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediately, please come back later.";
+	next();
+};
+
 exports.getOverview = catchAsync(async (req, res) => {
 	const tours = await Tour.find();
 	res.status(200).render('overview', {
@@ -46,8 +55,8 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
 
 	res.status(200).render('overview', {
 		title: 'My Tours',
-		tours
-	})
+		tours,
+	});
 });
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
