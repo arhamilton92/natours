@@ -2,6 +2,7 @@
 
 const path = require('path');
 const express = require('express');
+const compression = require('compression');
 // DEV
 const morgan = require('morgan');
 // SECURITY
@@ -97,6 +98,9 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
+
+// compress
+app.use(compression())
 
 // incorrect URL error handler
 app.all('*', (req, res, next) => {
