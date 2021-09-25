@@ -21,6 +21,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingController = require('./controller/bookingController');
 
 const app = express();
 
@@ -32,13 +33,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 // v GLOBAL MIDDLEWARE v -------------------
 // -----------------------------------------
-app.use(cors({
-	origin: process.env.CORS_ORIGIN
-}))
+app.use(
+	cors({
+		origin: process.env.CORS_ORIGIN,
+	})
+);
 
-app.options('*', cors({
-	origin: process.env.CORS_ORIGIN
-}))
+app.options(
+	'*',
+	cors({
+		origin: process.env.CORS_ORIGIN,
+	})
+);
 
 app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 // app.options('/api/v1/tours', cors())
@@ -69,6 +75,13 @@ const limiter = rateLimit({
 	message: 'Too many requests from this IP, please try again in an hour',
 });
 app.use('/api', limiter);
+
+// stripe webhook
+app.post(
+	'/webhook-checkout',
+	express.raw({ type: 'application/json' }),
+	bookingController.webhookCheckout
+);
 
 // parse and limit body size
 app.use(express.json({ limit: '10kb' }));
