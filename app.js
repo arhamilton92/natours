@@ -90,6 +90,8 @@ app.use(
 // -----------------------------------------
 // ^ GLOBAL MIDDLEWARE ^ -------------------
 
+app.use(compression());
+
 // v ROUTER v -------------------
 // -----------------------------------------
 app.use('/', viewRouter);
@@ -97,11 +99,6 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/review', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
-
-// compress
-app.use(compression({
-	filter: function () { return true; }
-}))
 
 // incorrect URL error handler
 app.all('*', (req, res, next) => {
