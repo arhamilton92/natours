@@ -3,7 +3,7 @@
 const Tour = require('../models/tourModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerfactory');
+const factory = require('./handlerFactory');
 
 const multer = require('multer'); // file uploads
 const sharp = require('sharp'); // image processing

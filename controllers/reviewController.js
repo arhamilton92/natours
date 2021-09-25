@@ -2,7 +2,7 @@
 
 const Review = require('../models/reviewModel');
 // const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerfactory');
+const factory = require('./handlerFactory');
 
 // MIDDLEWARE
 exports.allowNestedRoutes = (req, res, next) => {
