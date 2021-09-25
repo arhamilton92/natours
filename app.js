@@ -99,7 +99,9 @@ app.use('/api/v1/review', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 
 // compress
-app.use(compression())
+app.use(compression({
+	filter: function () { return true; }
+}))
 
 // incorrect URL error handler
 app.all('*', (req, res, next) => {
