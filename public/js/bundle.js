@@ -3231,12 +3231,10 @@ const bookTour = async tourId => {
       method: 'GET',
       url: `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`
     });
-    console.log(session);
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id
     });
   } catch (error) {
-    console.log('error');
     (0, _alerts.showAlert)('error', error.response.data.message);
   }
 };
@@ -3292,7 +3290,6 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
     (0, _updateSettings.updateSettings)(form, 'data');
   });
 }
@@ -3353,7 +3350,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52781" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61937" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

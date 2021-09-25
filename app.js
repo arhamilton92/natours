@@ -33,7 +33,6 @@ app.use(express.static(path.join(__dirname, 'public'))); // serve static files
 
 // env setup
 if (process.env.NODE_ENV === 'development') {
-	console.log('development');
 	app.use(morgan('dev')); // dev logging
 }
 // set security http headers

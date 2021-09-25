@@ -34,9 +34,7 @@ const upload = multer({
 // v MIDDLEWARE v --------------------------
 // -----------------------------------------
 exports.getMe = (req, res, next) => {
-	console.log('getme');
 	req.params.id = req.user.id;
-	console.log(req.params.id);
 	next();
 };
 exports.uploadUserPhoto = upload.single('photo');

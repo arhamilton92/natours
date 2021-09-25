@@ -14,7 +14,6 @@ const handleValidationErrorDB = (err) => {
 };
 const handleDuplicateFieldsDB = (err) => {
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-	console.log(value);
 	const message = `Duplicate field value: ${value}.`;
 	return new AppError(message, 400);
 };
@@ -70,6 +69,7 @@ const sendErrorProd = (err, req, res) => {
 				msg: err.message,
 			});
 		}
+		console.error('error', err)
 		return res.status(err.statusCode).render('error', {
 			title: 'Something went wrong',
 			msg: 'Please try again later.',

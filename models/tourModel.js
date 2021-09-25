@@ -156,8 +156,8 @@ tourSchema.pre(/^find/, function (next) {
 	next();
 }); // --------------------------------
 tourSchema.post(/^find/, function (docs, next) {
-	console.log('-----');
-	console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`);
+	// console.log('-----');
+	// console.log(`Query time elapsed: ${Date.now() - this.start} milliseconds`);
 	next();
 }); // --------------------------------
 // ------------------------------------

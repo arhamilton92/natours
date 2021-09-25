@@ -11,12 +11,10 @@ export const bookTour = async (tourId) => {
 			method: 'GET',
 			url: `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`,
         });
-        console.log(session)
         await stripe.redirectToCheckout({
             sessionId: session.data.session.id
         })
     } catch (error) {
-        console.log('error')
         showAlert('error', error.response.data.message);
     }
 };
