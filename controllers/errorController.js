@@ -1,5 +1,5 @@
 /** @format */
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/appError');
 
 // v MONGO ERROR v 
 // -----------------------------------------

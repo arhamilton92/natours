@@ -1,7 +1,7 @@
 /** @format */
 
 const Tour = require('../models/tourModel');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerfactory');
 
