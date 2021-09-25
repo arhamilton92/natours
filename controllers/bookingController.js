@@ -64,12 +64,12 @@ const createBookingCheckout = async (session) => {
 	await Booking.create({ tour, user, price });
 };
 
-exports.webhookCheckout = (req, res, next) => {
+exports.webhookCheckout = async (req, res, next) => {
 	const signature = req.headers['stripe-signature'];
 
 	let event;
 	try {
-		const event = stripe.webhooks.constructEvent(
+		event = await stripe.webhooks.constructEvent(
 			req.body,
 			signature,
 			process.env.STRIPE_WEBHOOK_SECRET
